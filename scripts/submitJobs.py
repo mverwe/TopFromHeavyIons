@@ -27,6 +27,7 @@ outDir=opt.output
 
 jobsBase='%s/FARM%s'%(workBase,time.time())
 os.system('mkdir -p %s'%jobsBase)
+os.system('cp %s/src/UserCode/TopFromHeavyIons/test/ExampleAnalysisParameters_cfg.py %s' % (cmsswBase,jobsBase))
 
 #init a new proxy if none has been passed
 if opt.proxy is None:
@@ -46,8 +47,8 @@ for n in xrange(1,opt.jobs+1):
     scriptFile.write('cd %s/src\n'%cmsswBase)
     scriptFile.write('eval `scram r -sh`\n')
     scriptFile.write('cd -\n')
-    scriptFile.write('runExample %s/src/UserCode/TopFromHeavyIons/test/ExampleAnalysisParameters_cfg.py %d %d\n' % (cmsswBase,(n-1)*opt.files,(n-1)*opt.files+opt.files))
-    #scriptFile.write('root -b -q "runJetPerformance.C(\\"output.list\\",\\"akPu3PFJetAnalyzer%d\\",%d,%d,%d,%d,%d)"\n' % (opt.thres,(n-1)*opt.nevts,opt.nevts,(n-1)*200,200,n)) #200 files per job
+    scriptFile.write('cp %s/ExampleAnalysisParameters_cfg.py .\n' % jobsBase)
+    scriptFile.write('runExample ExampleAnalysisParameters_cfg.py %d %d\n' % ((n-1)*opt.files,(n-1)*opt.files+opt.files))
     scriptFile.write('cmsMkdir $OUTDIR\n')
     scriptFile.write('export OUTPUT=AnaResults_%d.root\n' % n)
     scriptFile.write('cmsStage AnaResults.root $OUTDIR/$OUTPUT\n')
