@@ -36,6 +36,7 @@ public:
    void SetHiEvtName(TString name)     { fEvtName  = name ; }
    void SetParticlesName(TString name) { fParticlesName = name ; }
    void SetMetType(metType t)          { fMetType = t; }
+   void SetMinPt(Float_t m)            { fMinPt = m; }
    
  protected:
    TString           fEvtName;              //name of hi event container
@@ -43,11 +44,11 @@ public:
    TString           fParticlesName;        //name of particles
    TClonesArray     *fParticles;            //!muon array
    metType           fMetType;              //matching type (defines where to store)
-
+   Float_t           fMinPt;                //minimum pT of particles
    
    TH2F            *fh2MetCent;            //!MET vs centrality
    TH2F            *fh2SumEtCent;          //!SumEt vs centrality
-   TH3F            *fh3PtEtaPhi;          //!particle pt vs eta vs phi
+   TH3F            *fh3PtEtaPhi;           //!particle pt vs eta vs phi
 
    ClassDef(anaMET,1)
 };

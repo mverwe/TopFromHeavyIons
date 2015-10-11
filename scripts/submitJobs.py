@@ -16,7 +16,7 @@ parser.add_option('-j', '--jobs'       ,dest='jobs'   ,help='number of jobs'    
 parser.add_option('-f', '--files'      ,dest='files'  ,help='files per job'        ,default=5,   type=int)
 parser.add_option('-n', '--nevts'      ,dest='nevts'  ,help='number of events/job' ,default=-1,  type=int)
 parser.add_option(      '--proxy'      ,dest='proxy'  ,help='proxy to be used'     ,default=None, type='string')
-parser.add_option('-o', '--output'     ,dest='output' ,help='output directory'     ,default='/store/cmst3/user/mverweij/top/muonIso/TT/v2')
+parser.add_option('-o', '--output'     ,dest='output' ,help='output directory'     ,default='/store/cmst3/user/mverweij/top/muonIso/TT/v3')
 (opt, args) = parser.parse_args()
 
 #prepare working directory

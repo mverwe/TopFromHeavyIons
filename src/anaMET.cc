@@ -16,6 +16,7 @@ anaMET::anaMET(const char *name, const char *title)
   fParticlesName(""),
   fParticles(0x0),
   fMetType(kGen),
+  fMinPt(0.),
   fh2MetCent(),
   fh2SumEtCent(),
   fh3PtEtaPhi()
@@ -56,6 +57,7 @@ void anaMET::Exec(Option_t * /*option*/)
      }
        
      if(fMetType==kGen || fMetType==kPFRaw) {
+       if(p->Pt() < fMinPt) continue;
        TLorentzVector l = p->GetLorentzVector();
        fh3PtEtaPhi->Fill(l.Pt(),l.Eta(),l.Phi());
        p4+=l;
@@ -67,6 +69,7 @@ void anaMET::Exec(Option_t * /*option*/)
          Printf("%s ERROR: couldn't cast particle to pfParticle",GetName());
          return;
        }
+       if(pf->PtVS() < fMinPt) continue;
        TLorentzVector l;
        l.SetPtEtaPhiM(pf->PtVS(),pf->Eta(),pf->Phi(),pf->M());
        fh3PtEtaPhi->Fill(l.Pt(),l.Eta(),l.Phi());
@@ -80,12 +83,13 @@ void anaMET::Exec(Option_t * /*option*/)
          return;
        }
        TLorentzVector l = pf->GetPuppiWeight()*p->GetLorentzVector();
+       if(l.Pt() < fMinPt) continue;
        fh3PtEtaPhi->Fill(l.Pt(),l.Eta(),l.Phi());
        p4+=l;
        sumEt+=l.Et();
      }
      
-   }
+   }//particle loop
 
    TLorentzVector met = -p4;
    fh2MetCent->Fill(cent,met.Pt());
@@ -103,7 +107,7 @@ void anaMET::CreateOutputObjects() {
     return;
   }
 
-  fh2MetCent = new TH2F("fh2MetCent","fh2MetCent;centrality;MET",100,0,100,500,0,500.);
+  fh2MetCent = new TH2F("fh2MetCent","fh2MetCent;centrality;MET",100,0,100,500,0,1000.);
   fOutput->Add(fh2MetCent);
 
   fh2SumEtCent = new TH2F("fh2SumEtCent","fh2SumEtCent;centrality;sumET",100,0,100,500,0,10000.);

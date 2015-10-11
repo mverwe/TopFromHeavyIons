@@ -149,7 +149,7 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   pupProd->SetHiEvtName("hiEventContainer");
   pupProd->SetPFPartName("pfParticles");
   pupProd->SetJetsName("aktPUR030");
-  if(doPuppi) handler->Add(pupProd); //needed for isolation and MET
+  if(doPuppi) handler->Add(pupProd);
 
   //Initialization of all analysis modules
   anaJetQA *jetQA = new anaJetQA("anaJetQAAKTPUR030","anaJetQAAKTPUR030");
@@ -258,7 +258,41 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   metGen->SetParticlesName("genParticles");
   metGen->SetMetType(anaMET::kGen);
   handler->Add(metGen);
-  
+
+  //MET with minimum pT cut
+  anaMET *metPFRawPtMin = new anaMET("metPFRawPtMin","metPFRawPtMin");
+  metPFRawPtMin->ConnectEventObject(fEventObjects);
+  metPFRawPtMin->SetHiEvtName("hiEventContainer");
+  metPFRawPtMin->SetParticlesName("pfParticles");
+  metPFRawPtMin->SetMetType(anaMET::kPFRaw);
+  metPFRawPtMin->SetMinPt(3.);
+  handler->Add(metPFRawPtMin);
+
+  anaMET *metVSPtMin = new anaMET("metVSPtMin","metVSPtMin");
+  metVSPtMin->ConnectEventObject(fEventObjects);
+  metVSPtMin->SetHiEvtName("hiEventContainer");
+  metVSPtMin->SetParticlesName("pfParticles");
+  metVSPtMin->SetMetType(anaMET::kVS);
+  metVSPtMin->SetMinPt(3.);
+  handler->Add(metVSPtMin);
+
+  anaMET *metPuppiPtMin = new anaMET("metPuppiPtMin","metPuppiPtMin");
+  metPuppiPtMin->ConnectEventObject(fEventObjects);
+  metPuppiPtMin->SetHiEvtName("hiEventContainer");
+  metPuppiPtMin->SetParticlesName("pfParticles");
+  metPuppiPtMin->SetMetType(anaMET::kPuppi);
+  metPuppiPtMin->SetMinPt(3.);
+  if(doPuppi) handler->Add(metPuppiPtMin);
+
+  anaMET *metGenPtMin = new anaMET("metGenPtMin","metGenPtMin");
+  metGenPtMin->ConnectEventObject(fEventObjects);
+  metGenPtMin->SetHiEvtName("hiEventContainer");
+  metGenPtMin->SetParticlesName("genParticles");
+  metGenPtMin->SetMetType(anaMET::kGen);
+  metGenPtMin->SetMinPt(3.);
+  handler->Add(metGenPtMin);
+
+  //Z to mumu
   anaZToMuMu *ZToMuMu = new anaZToMuMu("ZToMuMu","ZToMuMu");
   ZToMuMu->ConnectEventObject(fEventObjects);
   ZToMuMu->SetHiEvtName("hiEventContainer");
