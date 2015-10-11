@@ -34,10 +34,13 @@ public:
    hiEventContainer *fHiEvent;              //!event container
    TString           fMuonsName;            //name of particles
    TClonesArray     *fMuons;                //!muon array
+   TString           fZsName;               // name of Z candidates
+   TClonesArray     *fZs;                   //!Z candidates container
+   
    Bool_t            fCheckPid;             //check if candidates are really muons (for simulation)
    TH1F             *fh1NMuons;             //!# selected muons in event
    TH3F             *fh3CentPtInvMass;      //!centrality vs Pt vs inv mass
    
-   ClassDef(anaZToMuMu,1)
+   ClassDef(anaZToMuMu,2)
 };
 #endif

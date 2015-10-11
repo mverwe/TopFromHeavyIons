@@ -69,7 +69,7 @@ void anaMuonMatcher::Exec(Option_t * /*option*/)
      if(closest>-1) {
        fh2MuPtDeltaR->Fill(muon->Pt(),drMin);
        fh2MuPtFracDeltaR->Fill(muon->Pt()/matched->Pt(),drMin);
-       if(fMatchType==kPF && fabs(muon->GetId())==5) {
+       if(fMatchType==kPF && fabs(muon->GetId())==3) {
          fh2MuPtDeltaRPF->Fill(muon->Pt(),drMin);
          fh2MuPtFracDeltaRPF->Fill(muon->Pt()/matched->Pt(),drMin);
        }

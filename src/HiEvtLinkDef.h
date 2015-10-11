@@ -1,6 +1,7 @@
 #include "UserCode/TopFromHeavyIons/interface/hiEvt.h"
 #include "UserCode/TopFromHeavyIons/interface/topEvt.h"
 
+#include "UserCode/TopFromHeavyIons/interface/diParticle.h"
 #include "UserCode/TopFromHeavyIons/interface/ForestMuons.h"
 #include "UserCode/TopFromHeavyIons/interface/ForestPFs.h"
 #include "UserCode/TopFromHeavyIons/interface/ForestJets.h"
@@ -43,6 +44,7 @@
 
 #pragma link C++ class hiEvt;
 #pragma link C++ class topEvt;
+#pragma link C++ class diParticle;
 #pragma link C++ class ForestMuons;
 #pragma link C++ class ForestPFs;
 #pragma link C++ class ForestJets;

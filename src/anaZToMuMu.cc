@@ -1,5 +1,6 @@
 #include "UserCode/TopFromHeavyIons/interface/anaZToMuMu.h"
 #include "UserCode/TopFromHeavyIons/interface/genParticle.h"
+#include "UserCode/TopFromHeavyIons/interface/diParticle.h"
 
 #include "TLorentzVector.h"
 
@@ -13,6 +14,8 @@ anaZToMuMu::anaZToMuMu(const char *name, const char *title)
   fHiEvent(),
   fMuonsName(""),
   fMuons(0x0),
+  fZsName(""),
+  fZs(0x0),
   fCheckPid(kFALSE),
   fh1NMuons(),
   fh3CentPtInvMass()
@@ -35,9 +38,16 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
    if(!fMuons && !fMuonsName.IsNull()) {
      fMuons = dynamic_cast<TClonesArray*>(fEventObjects->FindObject(fMuonsName.Data()));
    }
-   
    if(!fMuons) return;
 
+   //Make array for Z candidates
+   if(!fEventObjects->FindObject(fZsName)) {
+      fZs = new TClonesArray("diParticle");
+      fZs->SetName(fZsName);
+      fEventObjects->Add(fZs);
+    }
+   if(fZs) fZs->Delete();
+   
    Double_t cent = fHiEvent->GetCentrality();
 
    Int_t nmuons = fMuons->GetEntriesFast();
@@ -52,7 +62,8 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
      }
      if(fCheckPid)
        if(!CheckPid(mu1)) continue;
-     
+
+     int count = 0;
      for (int j = i+1; j < fMuons->GetEntriesFast(); j++) {
        particleBase *mu2 = static_cast<particleBase*>(fMuons->At(j));
        if(!mu2) {
@@ -71,6 +82,20 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
 
        fh3CentPtInvMass->Fill(cent,dimu.Pt(),dimu.M());
 
+       //Store Z candidates in event
+       if(fZs) {
+         diParticle *pPart = new ((*fZs)[count])
+           diParticle(dimu.Pt(),
+                      dimu.Eta(),
+                      dimu.Phi(),
+                      dimu.M(),
+                      11);
+         pPart->SetCharge(0);
+         pPart->AddParticle(mu1);
+         pPart->AddParticle(mu2);
+         ++count;
+       }
+       
      }//muon 2 loop
    }//muon 1 loop
 
