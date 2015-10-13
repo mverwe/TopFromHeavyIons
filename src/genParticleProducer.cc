@@ -110,7 +110,8 @@ Bool_t genParticleProducer::Run(Long64_t entry) {
     (*fGenParticles)[ngen] = gp;
     ++ngen;
   }
-  
+  fGenParticles->Sort();
+
   return kTRUE;
 }
 

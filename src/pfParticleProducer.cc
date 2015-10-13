@@ -97,6 +97,8 @@ Bool_t pfParticleProducer::Run(Long64_t entry) {
     pPart->SetPtVS(fPFs.pfVsPt[i]);
     ++pfCount;
   }
+  fpfParticles->Sort();
+
   return kTRUE;
 }
 

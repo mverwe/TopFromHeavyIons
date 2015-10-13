@@ -151,6 +151,7 @@ Bool_t lwMuonProducer::Run(Long64_t entry) {
     (*flwMuonsReco)[muCount] = mu;
     ++muCount;
   }
+  flwMuonsReco->Sort();
   //Printf("%d reconstructed muons",muCount);
 
   //generated muons
@@ -167,6 +168,7 @@ Bool_t lwMuonProducer::Run(Long64_t entry) {
     (*flwMuonsGene)[muCount] = mu;
     ++muCount;
   }
+  flwMuonsGene->Sort();
   //Printf("%d generated muons",muCount);
   
   return kTRUE;
