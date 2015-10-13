@@ -63,6 +63,7 @@
 #pragma link C++ class pfParticleProducer;
 #pragma link C++ class rhoMap;
 
+#pragma link C++ class FJJetShape;
 #pragma link C++ class FJWrapper;
 #pragma link C++ class LWJetProducer;
 
