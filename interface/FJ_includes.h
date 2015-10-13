@@ -15,8 +15,8 @@
 #include <fastjet/tools/BackgroundEstimatorBase.hh>
 #include <fastjet/tools/Subtractor.hh>
 //from contrib package
-//#include <fastjet/contrib/GenericSubtractor.hh>
-//#include <fastjet/contrib/ShapeWithComponents.hh>
-//#include <fastjet/contrib/ConstituentSubtractor.hh>
+#include <fastjet/contrib/GenericSubtractor.hh>
+#include <fastjet/contrib/ShapeWithComponents.hh>
+#include <fastjet/contrib/ConstituentSubtractor.hh>
 
 #endif

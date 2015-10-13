@@ -3,6 +3,7 @@
 <use name="roofit"/>
 <use name="rootrflx"/>
 <use name="fastjet"/>
+<use name="fastjet-contrib"/>
 <use name="roostats"/>
 <use name="boost"/>
 <export>

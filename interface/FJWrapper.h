@@ -41,7 +41,6 @@ class FJWrapper
   Bool_t                                  GetLegacyMode()            { return fLegacyMode; }
   Bool_t                                  GetDoFilterArea()          { return fDoFilterArea; }
 
-  /*
   const std::vector<fastjet::contrib::GenericSubtractorInfo> GetGenSubtractorInfoJetMass()        const {return fGenSubtractorInfoJetMass        ; }
   const std::vector<fastjet::contrib::GenericSubtractorInfo> GetGenSubtractorInfoJetAngularity()  const {return fGenSubtractorInfoJetAngularity  ; } 
   const std::vector<fastjet::contrib::GenericSubtractorInfo> GetGenSubtractorInfoJetpTD()         const {return fGenSubtractorInfoJetpTD         ; }
@@ -50,7 +49,7 @@ class FJWrapper
   const std::vector<fastjet::contrib::GenericSubtractorInfo> GetGenSubtractorInfoJetConstituent() const {return fGenSubtractorInfoJetConstituent ; } 
   const std::vector<fastjet::contrib::GenericSubtractorInfo> GetGenSubtractorInfoJetLeSub()       const {return fGenSubtractorInfoJetLeSub       ; }
   const std::vector<fastjet::PseudoJet>                      GetConstituentSubtrJets()            const {return fConstituentSubtrJets            ; }
-  */
+ 
   virtual std::vector<double>                                GetGRNumerator()                     const { return fGRNumerator                    ; }
   virtual std::vector<double>                                GetGRDenominator()                   const { return fGRDenominator                  ; }
   virtual std::vector<double>                                GetGRNumeratorSub()                  const { return fGRNumeratorSub                 ; }
@@ -129,7 +128,6 @@ class FJWrapper
 
   fastjet::JetMedianBackgroundEstimator   *fBkrdEstimator;    //!
   //from contrib package
-  /*
   fastjet::contrib::GenericSubtractor     *fGenSubtractor;    //!
   std::vector<fastjet::contrib::GenericSubtractorInfo> fGenSubtractorInfoJetMass;        //!
   std::vector<fastjet::contrib::GenericSubtractorInfo> fGenSubtractorInfoGRNum;          //!
@@ -140,7 +138,7 @@ class FJWrapper
   std::vector<fastjet::contrib::GenericSubtractorInfo> fGenSubtractorInfoJetSigma2;      //!
   std::vector<fastjet::contrib::GenericSubtractorInfo> fGenSubtractorInfoJetConstituent; //!
   std::vector<fastjet::contrib::GenericSubtractorInfo> fGenSubtractorInfoJetLeSub;       //!
-  */
+  
   Bool_t                                   fDoFilterArea;         //!
   Bool_t                                   fLegacyMode;           //!
   Bool_t                                   fUseExternalBkg;       //!
@@ -298,8 +296,8 @@ void FJWrapper::Clear(const Option_t */*opt*/)
   delete fClustSeq;        fClustSeq        = 0;
   if (fClustSeqSA)        { delete fClustSeqSA;        fClustSeqSA        = 0; }
   if (fClustSeqActGhosts) { delete fClustSeqActGhosts; fClustSeqActGhosts = 0; }
-  if (fBkrdEstimator)     delete fBkrdEstimator     ;  fBkrdEstimator     = 0;
-  // if (fGenSubtractor)     delete fGenSubtractor     ;  fGenSubtractor     = 0;
+  if (fBkrdEstimator)     { delete fBkrdEstimator     ;  fBkrdEstimator     = 0;}
+  if (fGenSubtractor)     { delete fGenSubtractor     ;  fGenSubtractor     = 0;}
 }
 
 //_________________________________________________________________________________________________
@@ -691,7 +689,7 @@ void FJWrapper::SubtractBackground(Double_t median_pt)
 
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetMass() {
-  /*
+  
   //Do generic subtraction for jet mass
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
@@ -707,14 +705,14 @@ Int_t FJWrapper::DoGenericSubtractionJetMass() {
       double subtracted_shape = (*fGenSubtractor)(shapeMass, fInclusiveJets[i], info);
     fGenSubtractorInfoJetMass.push_back(info);
   }
-  */
+  
   return 0;
 }
 
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionGR(Int_t ijet) {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for jet structure function
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -746,12 +744,12 @@ Int_t FJWrapper::DoGenericSubtractionGR(Int_t ijet) {
     fGRNumeratorSub.push_back(infoNum.second_order_subtracted());
     fGRDenominatorSub.push_back(infoDen.second_order_subtracted());
   }
-  */
+  
   return 0;
 }
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetAngularity() {
-  /*
+  
   //Do generic subtraction for jet mass
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
@@ -767,13 +765,13 @@ Int_t FJWrapper::DoGenericSubtractionJetAngularity() {
       double subtracted_shape = (*fGenSubtractor)(shapeAngularity, fInclusiveJets[i], infoAng);
     fGenSubtractorInfoJetAngularity.push_back(infoAng);
   }
-  */
+  
   return 0;
 }
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetpTD() {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for pTD
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -788,13 +786,13 @@ Int_t FJWrapper::DoGenericSubtractionJetpTD() {
       double subtracted_shape = (*fGenSubtractor)(shapepTD, fInclusiveJets[i], infopTD);
     fGenSubtractorInfoJetpTD.push_back(infopTD);
   }
-  */
+  
   return 0;
 }
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetCircularity() {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for jet circularity
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -809,13 +807,13 @@ Int_t FJWrapper::DoGenericSubtractionJetCircularity() {
       double subtracted_shape = (*fGenSubtractor)(shapecircularity, fInclusiveJets[i], infoCirc);
     fGenSubtractorInfoJetCircularity.push_back(infoCirc);
   }
-  */
+  
  return 0;
 }
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetSigma2() {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for jet sigma2
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -830,13 +828,13 @@ Int_t FJWrapper::DoGenericSubtractionJetSigma2() {
       double subtracted_shape = (*fGenSubtractor)(shapesigma2, fInclusiveJets[i], infoSigma);
     fGenSubtractorInfoJetSigma2.push_back(infoSigma);
   }
-  */
+  
   return 0;
 }
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetConstituent() {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for #constituents
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -851,14 +849,14 @@ Int_t FJWrapper::DoGenericSubtractionJetConstituent() {
       double subtracted_shape = (*fGenSubtractor)(shapeconst, fInclusiveJets[i], infoConst);
     fGenSubtractorInfoJetConstituent.push_back(infoConst);
   }
-  */
+  
   return 0;
 }
 
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoGenericSubtractionJetLeSub() {
-  /*
-  //Do generic subtraction for jet mass
+  
+  //Do generic subtraction for leading-subleading constituent
   if(fUseExternalBkg)   fGenSubtractor     = new fj::contrib::GenericSubtractor(fRho,fRhom);
   else                  fGenSubtractor     = new fj::contrib::GenericSubtractor(fBkrdEstimator);
 
@@ -873,14 +871,13 @@ Int_t FJWrapper::DoGenericSubtractionJetLeSub() {
       double subtracted_shape = (*fGenSubtractor)(shapeLeSub, fInclusiveJets[i], infoLeSub);
     fGenSubtractorInfoJetLeSub.push_back(infoLeSub);
   }
-  */
+  
   return 0;
 }
 
 //_________________________________________________________________________________________________
 Int_t FJWrapper::DoConstituentSubtraction() {
   //Do constituent subtraction
-  /*
   fj::contrib::ConstituentSubtractor *subtractor;
   if(fUseExternalBkg)
     subtractor     = new fj::contrib::ConstituentSubtractor(fRho,fRhom,kFALSE,kTRUE);
@@ -895,7 +892,7 @@ Int_t FJWrapper::DoConstituentSubtraction() {
     fConstituentSubtrJets.push_back(subtracted_jet);
   }
   if(subtractor) delete subtractor;
-  */
+  
   return 0;
 }
 
