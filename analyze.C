@@ -26,6 +26,7 @@ using namespace std;
 
 Bool_t doMuonIsolation = kTRUE;//kFALSE;
 Bool_t doPuppi         = kTRUE;//kFALSE;
+Bool_t doMuonIsoInBJet = kTRUE;
 
 void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.root", Long64_t nentries = 20, Int_t firstF = -1, Int_t lastF = -1) {
 
@@ -34,8 +35,8 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   // Printf("anaFile: %d",anaFile);
   
   std::cout << "nfiles: " << urls.size() << std::endl;
-  // for (auto i = urls.begin(); i != urls.end(); ++i)
-  //   std::cout << *i << std::endl;
+  for (auto i = urls.begin(); i != urls.end(); ++i)
+    std::cout << *i << std::endl;
 
   size_t firstFile = 0;
   size_t lastFile = urls.size();
@@ -105,7 +106,7 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   p_PUJet->SetEventObjects(fEventObjects);
 
   
-  //anti-kt jet finder
+  //anti-kt jet finder on reconstructed pf candidates
   LWJetProducer *lwjakt = new LWJetProducer("LWJetProducerAKTR030");
   lwjakt->SetInput(chain);
   lwjakt->SetEventObjects(fEventObjects);
@@ -115,6 +116,17 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   lwjakt->SetPtMinConst(0.);
   lwjakt->SetParticlesName("pfParticles");
   lwjakt->SetJetContName("JetsAKTR030");
+
+  //anti-kt jet finder on reconstructed pf candidates
+  LWJetProducer *lwjaktGen = new LWJetProducer("LWJetProducerAKTR030");
+  lwjaktGen->SetInput(chain);
+  lwjaktGen->SetEventObjects(fEventObjects);
+  lwjaktGen->SetJetType(LWJetProducer::kAKT);
+  lwjaktGen->SetRadius(0.3);
+  lwjaktGen->SetGhostArea(0.005);
+  lwjaktGen->SetPtMinConst(0.);
+  lwjaktGen->SetParticlesName("genParticles");
+  lwjaktGen->SetJetContName("GenJetsAKTR030");
 
   //kt jet finder
   LWJetProducer *lwjkt = new LWJetProducer("LWJetProducerKTR020");
@@ -231,6 +243,65 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
     if(doPuppi) handler->Add(muonIsoPuppi);
   }
 
+  if(doMuonIsoInBJet) {
+    anaMuonIsolation *muonIsoRawBjet = new anaMuonIsolation("muonIsoRawBjet","muonIsoRawBjet");
+    muonIsoRawBjet->ConnectEventObject(fEventObjects);
+    muonIsoRawBjet->SetHiEvtName("hiEventContainer");
+    muonIsoRawBjet->SetMuonsName("lwMuonsReco");
+    muonIsoRawBjet->SetMuonsGenName("lwMuonsGene");
+    muonIsoRawBjet->SetPFPartName("pfParticles");
+    muonIsoRawBjet->SetIsolationType(anaMuonIsolation::kRaw);
+    muonIsoRawBjet->SetCheckBjet(kTRUE);
+    muonIsoRawBjet->SetJetContName("aktPUR030");
+    
+    anaMuonIsolation *muonIsoVSBjet = new anaMuonIsolation("muonIsoVSBjet","muonIsoVSBjet");
+    muonIsoVSBjet->ConnectEventObject(fEventObjects);
+    muonIsoVSBjet->SetHiEvtName("hiEventContainer");
+    muonIsoVSBjet->SetMuonsName("lwMuonsReco");
+    muonIsoVSBjet->SetMuonsGenName("lwMuonsGene");
+    muonIsoVSBjet->SetPFPartName("pfParticles");
+    muonIsoVSBjet->SetIsolationType(anaMuonIsolation::kVS);
+    muonIsoVSBjet->SetCheckBjet(kTRUE);
+    muonIsoVSBjet->SetJetContName("aktPUR030");
+    
+    anaMuonIsolation *muonIsoAreaBjet = new anaMuonIsolation("muonIsoAreaBjet","muonIsoAreaBjet");
+    muonIsoAreaBjet->ConnectEventObject(fEventObjects);
+    muonIsoAreaBjet->SetHiEvtName("hiEventContainer");
+
+    muonIsoAreaBjet->SetPFPartName("pfParticles");
+    muonIsoAreaBjet->SetIsolationType(anaMuonIsolation::kArea);
+    muonIsoAreaBjet->SetRhoMapName("rhoMap");
+    muonIsoAreaBjet->SetCheckBjet(kTRUE);
+    muonIsoAreaBjet->SetJetContName("aktPUR030");
+    
+    anaMuonIsolation *muonIsoCSBjet = new anaMuonIsolation("muonIsoCSBjet","muonIsoCSBjet");
+    muonIsoCSBjet->ConnectEventObject(fEventObjects);
+    muonIsoCSBjet->SetHiEvtName("hiEventContainer");
+    muonIsoCSBjet->SetMuonsName("lwMuonsReco");
+    muonIsoCSBjet->SetMuonsGenName("lwMuonsGene");
+    muonIsoCSBjet->SetPFPartName("pfParticles");
+    muonIsoCSBjet->SetIsolationType(anaMuonIsolation::kCS);
+    muonIsoCSBjet->SetRhoMapName("rhoMap");
+    muonIsoCSBjet->SetCheckBjet(kTRUE);
+    muonIsoCSBjet->SetJetContName("aktPUR030");
+    
+    anaMuonIsolation *muonIsoPuppiBjet = new anaMuonIsolation("muonIsoPuppiBjet","muonIsoPuppiBjet");
+    muonIsoPuppiBjet->ConnectEventObject(fEventObjects);
+    muonIsoPuppiBjet->SetHiEvtName("hiEventContainer");
+    muonIsoPuppiBjet->SetMuonsName("lwMuonsReco");
+    muonIsoPuppiBjet->SetMuonsGenName("lwMuonsGene");
+    muonIsoPuppiBjet->SetPFPartName("pfParticles");
+    muonIsoPuppiBjet->SetIsolationType(anaMuonIsolation::kPuppi);
+    muonIsoPuppiBjet->SetCheckBjet(kTRUE);
+    muonIsoPuppiBjet->SetJetContName("aktPUR030");
+
+    handler->Add(muonIsoRawBjet);
+    handler->Add(muonIsoVSBjet);
+    handler->Add(muonIsoAreaBjet);
+    handler->Add(muonIsoCSBjet);
+    if(doPuppi) handler->Add(muonIsoPuppiBjet);
+  }
+
   anaMET *metPFRaw = new anaMET("metPFRaw","metPFRaw");
   metPFRaw->ConnectEventObject(fEventObjects);
   metPFRaw->SetHiEvtName("hiEventContainer");
@@ -292,6 +363,23 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   metGenPtMin->SetMinPt(3.);
   handler->Add(metGenPtMin);
 
+  //MET from jets
+  anaMET *metJet = new anaMET("metJet","metJet");
+  metJet->ConnectEventObject(fEventObjects);
+  metJet->SetHiEvtName("hiEventContainer");
+  metJet->SetParticlesName("aktPUR030");//aktPUR030
+  metJet->SetMetType(anaMET::kPFRaw);
+  metJet->SetMinPt(30.);
+  handler->Add(metJet);
+
+  anaMET *metGenJet = new anaMET("metGenJet","metGenJet");
+  metGenJet->ConnectEventObject(fEventObjects);
+  metGenJet->SetHiEvtName("hiEventContainer");
+  metGenJet->SetParticlesName("GenJetsAKTR030");
+  metGenJet->SetMetType(anaMET::kGen);
+  metGenJet->SetMinPt(30.);
+  handler->Add(metGenJet);
+  
   //Z to mumu
   anaZToMuMu *ZToMuMu = new anaZToMuMu("ZToMuMu","ZToMuMu");
   ZToMuMu->ConnectEventObject(fEventObjects);
@@ -333,7 +421,8 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
     
     //    lwjakt->FindJets();  //anti-kt jets
     lwjkt->FindJets();   //kt jets
-   
+    lwjaktGen->FindJets(); //akt gen jets
+    
     //Execute all analysis tasks
     handler->ExecuteTask();
 

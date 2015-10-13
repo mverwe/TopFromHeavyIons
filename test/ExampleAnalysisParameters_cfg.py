@@ -27,8 +27,8 @@ centralityRequirements={"inc":[0,200],
                         "80to100":[160,200]}
 
 
-#sample=tt_PbPb
-sample=DY_PbPb
+sample=tt_PbPb
+#sample=DY_PbPb
 
 centralityBins=centralityRequirements["inc"]
 #centralityBins=centralityRequirements["0to20"]
