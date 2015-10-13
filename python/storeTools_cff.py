@@ -44,7 +44,7 @@ def fillFromStore(dir,ffile=0,step=-1,generatePfn=True):
         return localdataset
     elif dir.find('/store/')==0:
         prefix='eoscms'
-        lscommand = 'cmsLs ' + dir + ' | grep root | awk \'{print $5}\''
+        lscommand = 'cmsLs ' + dir + ' | grep root | awk \'{print $1}\''
         lsouttmp = commands.getstatusoutput(lscommand)[1].split()
 
         #this is needed as cmsLs lists twice files staged from castor
@@ -80,7 +80,7 @@ def fillFromStore(dir,ffile=0,step=-1,generatePfn=True):
                 sline=''
                 if prefix=='eoscms':
                     if(generatePfn) :
-                        sline='root://eoscms//eos/cms/'+line
+                        sline='root://eoscms//eos/cms/'+dir+'/'+line
                         #sline=commands.getstatusoutput('cmsPfn ' + line )[1]
                     else            : sline=line
                 elif(prefix=='singlefile') :
