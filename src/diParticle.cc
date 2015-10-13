@@ -47,7 +47,4 @@ diParticle &diParticle::operator=(const diParticle &other)
   }
   return *this;
 }
-  
-  
-
 

@@ -17,7 +17,7 @@ class diParticle : public particleBase {
   diParticle(const diParticle& obj); // copy constructor
   diParticle& operator=(const diParticle& other); // assignment
 
-  void AddParticle(particleBase *p);
+  void           AddParticle(particleBase *p);
   
  protected:
   TObjArray            fDecayParticles;   // pointer to decay particles

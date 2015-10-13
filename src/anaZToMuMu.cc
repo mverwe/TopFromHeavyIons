@@ -41,7 +41,7 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
    if(!fMuons) return;
 
    //Make array for Z candidates
-   if(!fEventObjects->FindObject(fZsName)) {
+   if(!fEventObjects->FindObject(fZsName) && !fZs) {
       fZs = new TClonesArray("diParticle");
       fZs->SetName(fZsName);
       fEventObjects->Add(fZs);
@@ -74,8 +74,7 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
          continue;
        if(fCheckPid)
          if(!CheckPid(mu2)) continue;
-   
-       
+          
        TLorentzVector l1 = mu1->GetLorentzVector();
        TLorentzVector l2 = mu2->GetLorentzVector();
        TLorentzVector dimu = l1 + l2;
