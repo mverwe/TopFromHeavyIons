@@ -11,6 +11,8 @@
 #include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 #include "UserCode/TopFromHeavyIons/interface/rhoMap.h"
 #include "UserCode/TopFromHeavyIons/interface/pfParticle.h"
+#include "UserCode/TopFromHeavyIons/interface/lwMuon.h"
+#include "UserCode/TopFromHeavyIons/interface/lwJetContainer.h"
 
 //
 // muon isolation with different methods
@@ -42,8 +44,12 @@ public:
    void SetMuonsGenName(TString name) { fMuonsGenName = name ; }
 
    void SetConeRadius(Double_t r)         { fConeRadius = r; }
-   void SetConeOffset(Double_t o)         { fOffset = o; }
+   void SetConeOffset(Double_t o)         { fOffset     = o; }
    void SetIsolationType(isolationType t) { fIsolationType = t; }
+
+   void SetJetContName(TString name)      { fJetContainerName = name ; }
+   void SetCheckBjet(Bool_t b)            { fCheckBjet = b ; }
+   Bool_t IsMuonFromBjet(lwMuon *mu);
    
  protected:
    Double_t          DoConstituentSubtraction(std::vector<pfParticle> particles, const Double_t muEta, const Double_t muPhi, Double_t &ptlead);
@@ -66,12 +72,16 @@ public:
    rhoMap           *fRhoMMap;          //!rhom map
    TString           fMuonsGenName;     //name of generated muon array
    TClonesArray     *fMuonsGen;         //!gen muon array
+   Bool_t            fCheckBjet;        // check if muon is from bjet
+   Double_t          fMaxDistToBjet;    // maximum distance to bjet
+   TString           fJetContainerName; //name of jet container
+   lwJetContainer   *fJetContainer;     //!jet container
    
    TH2F             *fh2CentIso;        //!isolation (ptCone/ptMu) vs centrality
    TH2F            **fh2IsoZCone;       //!isolation vs z of leading part in cone
    TH2F            **fh2PtRecoIso;      //! isolation vs pt of reco muon
    TH2F            **fh2PtGenIso;       //! isolation vs pt,gen of reco muon
       
-   ClassDef(anaMuonIsolation,1)
+   ClassDef(anaMuonIsolation,2)
 };
 #endif

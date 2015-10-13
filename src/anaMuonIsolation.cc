@@ -1,6 +1,5 @@
 #include "UserCode/TopFromHeavyIons/interface/anaMuonIsolation.h"
 
-#include "UserCode/TopFromHeavyIons/interface/lwMuon.h"
 #include "UserCode/TopFromHeavyIons/interface/pfParticle.h"
 #include "UserCode/TopFromHeavyIons/interface/genParticle.h"
 
@@ -28,6 +27,10 @@ anaMuonIsolation::anaMuonIsolation(const char *name, const char *title)
   fRhoMMap(),
   fMuonsGenName(""),
   fMuonsGen(0x0),
+  fCheckBjet(kFALSE),
+  fMaxDistToBjet(0.2),
+  fJetContainerName(""),
+  fJetContainer(),
   fh2CentIso(),
   fh2IsoZCone(),
   fh2PtRecoIso(),
@@ -88,6 +91,12 @@ void anaMuonIsolation::Exec(Option_t * /*option*/)
    }
    if(!fPFParticles) return;
 
+   //Get jets
+   if(!fJetContainer && !fJetContainerName.IsNull()) {
+     fJetContainer = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetContainerName.Data()));
+   }
+
+
    //Determine centrality bin
    Double_t cent = fHiEvent->GetCentrality();
    if(cent>=0. && cent<10.)       fCentBin = 0;
@@ -99,6 +108,12 @@ void anaMuonIsolation::Exec(Option_t * /*option*/)
    std::vector<pfParticle> partInCone;
    for (int i = 0; i < fMuons->GetEntriesFast(); i++) {
      lwMuon *muon = static_cast<lwMuon*>(fMuons->At(i));
+     if(!muon) continue;
+     if(fCheckBjet) {
+       if(!IsMuonFromBjet(muon)) 
+         continue;
+     }    
+
      partInCone.clear();
      Double_t conePt = 0.;
      Double_t ptlead = -1;
@@ -160,6 +175,23 @@ void anaMuonIsolation::Exec(Option_t * /*option*/)
        }
      }
    }//reco muon loop
+}
+
+//----------------------------------------------------------
+Bool_t anaMuonIsolation::IsMuonFromBjet(lwMuon *mu) {
+
+  Double_t drmin = 999.;
+  for (int i = 0; i < fJetContainer->GetNJets(); i++) {
+    lwJet *jet = fJetContainer->GetJet(i);
+    if(!jet) continue;
+    if(abs(jet->GetRefPartonForB())==5) {
+      Double_t dr = mu->DeltaR(jet);
+      if(dr<drmin) drmin = dr;
+    }
+  }
+  //Printf("Closest distance to bjet: %f",drmin);
+  if(drmin<fMaxDistToBjet) return kTRUE;
+  return kFALSE;
 }
 
 //----------------------------------------------------------
@@ -305,17 +337,17 @@ void anaMuonIsolation::CreateOutputObjects() {
   for(Int_t i = 0; i<4; i++) {
     histName = Form("fh2IsoZCone_%d",i);
     histTitle = Form("%s;p_{T,cone}/p_{T,muon};z_{lead,cone}",histName.Data());
-    fh2IsoZCone[i] = new TH2F(histName.Data(),histTitle.Data(),600,-1,5,100,0,1.);
+    fh2IsoZCone[i] = new TH2F(histName.Data(),histTitle.Data(),400,-3,5,100,0,1.);
     fOutput->Add(fh2IsoZCone[i]);
 
     histName = Form("fh2PtRecoIso_%d",i);
     histTitle = Form("%s;p_{T,muon,reco};iso",histName.Data());
-    fh2PtRecoIso[i] = new TH2F(histName.Data(),histTitle.Data(),100,0.,100.,600,-1,5);
+    fh2PtRecoIso[i] = new TH2F(histName.Data(),histTitle.Data(),100,0.,100.,400,-3,5);
     fOutput->Add(fh2PtRecoIso[i]);
 
     histName = Form("fh2PtGenIso_%d",i);
     histTitle = Form("%s;p_{T,muon,gen};iso",histName.Data());
-    fh2PtGenIso[i] = new TH2F(histName.Data(),histTitle.Data(),100,0.,100.,600,-1,5);
+    fh2PtGenIso[i] = new TH2F(histName.Data(),histTitle.Data(),100,0.,100.,400,-3,5);
     fOutput->Add(fh2PtGenIso[i]);
   }
 

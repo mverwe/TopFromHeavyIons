@@ -39,16 +39,19 @@ public :
    Float_t         neutralMax[maxJets];   //[nref]
    Float_t         neutralSum[maxJets];   //[nref]
    Int_t           neutralN[maxJets];   //[nref]
-
    Float_t         hcalSum[maxJets];   //[nref]
    Float_t         ecalSum[maxJets];   //[nref]
-
    Float_t         eMax[maxJets];   //[nref]
    Float_t         eSum[maxJets];   //[nref]
    Int_t           eN[maxJets];   //[nref]
    Float_t         muMax[maxJets];   //[nref]
    Float_t         muSum[maxJets];   //[nref]
    Int_t           muN[maxJets];   //[nref]
+   Float_t         discr_ssvHighEff[maxJets];   //[nref]
+   Float_t         discr_ssvHighPur[maxJets];   //[nref]
+   Float_t         discr_csvMva[maxJets];   //[nref]
+   Float_t         discr_csvSimple[maxJets];   //[nref]
+   
    Float_t         matchedPt[maxJets];   //[nref]
    Float_t         matchedR[maxJets];   //[nref]
    Int_t           beamId1;
@@ -117,16 +120,19 @@ public :
    TBranch        *b_neutralMax;   //!
    TBranch        *b_neutralSum;   //!
    TBranch        *b_neutralN;   //!
-
    TBranch        *b_hcalSum;   //!
    TBranch        *b_ecalSum;   //!
-
    TBranch        *b_eMax;   //!
    TBranch        *b_eSum;   //!
    TBranch        *b_eN;   //!
    TBranch        *b_muMax;   //!
    TBranch        *b_muSum;   //!
    TBranch        *b_muN;   //!
+   TBranch        *b_discr_ssvHighEff;   //!
+   TBranch        *b_discr_ssvHighPur;   //!
+   TBranch        *b_discr_csvMva;       //!
+   TBranch        *b_discr_csvSimple;    //!
+   
    TBranch        *b_matchedPt;   //!
    TBranch        *b_matchedR;   //!
    TBranch        *b_beamId1;   //!

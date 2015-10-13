@@ -12,7 +12,8 @@ particleBase(),
   fArea(-1),
   fConstIds(),
   fRefParton(-1),
-  fRefPartonForB(-1)
+  fRefPartonForB(-1),
+  fCsvSimpleDiscr(-1)
 {
   //default constructor
 }
@@ -23,7 +24,8 @@ lwJet::lwJet(Double_t pt, Double_t eta, Double_t phi, Double_t m, Int_t id, Int_
   fArea(-1),
   fConstIds(),
   fRefParton(-1),
-  fRefPartonForB(-1)
+  fRefPartonForB(-1),
+  fCsvSimpleDiscr(-1)
 {
   //standard constructor
 }
@@ -34,7 +36,8 @@ lwJet::lwJet(const lwJet &obj) :
   fArea(obj.fArea),
   fConstIds(obj.fConstIds),
   fRefParton(obj.fRefParton),
-  fRefPartonForB(obj.fRefPartonForB)
+  fRefPartonForB(obj.fRefPartonForB),
+  fCsvSimpleDiscr(obj.fCsvSimpleDiscr)
 {
   //copy constructor
 }
@@ -46,10 +49,11 @@ lwJet &lwJet::operator=(const lwJet &other)
 
   if(this!=&other) {
     lwJet::operator=(other);
-    fArea          = other.fArea;
-    fConstIds      = other.fConstIds;
-    fRefParton     = other.fRefParton;
-    fRefPartonForB = other.fRefPartonForB; 
+    fArea           = other.fArea;
+    fConstIds       = other.fConstIds;
+    fRefParton      = other.fRefParton;
+    fRefPartonForB  = other.fRefPartonForB;
+    fCsvSimpleDiscr = other.fCsvSimpleDiscr;
   }
   return *this;
 }

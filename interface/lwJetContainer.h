@@ -10,7 +10,7 @@
 #include <TClonesArray.h>
 
 #include <UserCode/TopFromHeavyIons/interface/lwJet.h>
-#include "UserCode/TopFromHeavyIons/interface/pfParticle.h"
+#include "UserCode/TopFromHeavyIons/interface/particleBase.h"
 
 class lwJetContainer : public TNamed {
  public:
@@ -20,8 +20,9 @@ class lwJetContainer : public TNamed {
 
   Int_t         GetNJets()                 const { return fJets->GetEntriesFast();}
   TClonesArray* GetJets()                  const { return fJets; }
+  lwJet*        GetJet(Int_t i)            const ;
   TClonesArray* GetConstituents()          const { return fConst;}
-  pfParticle*   GetConstituentAt(Int_t i)  const { return static_cast<pfParticle*>(fConst->At(i));}
+  particleBase* GetConstituentAt(Int_t i)  const { return static_cast<particleBase*>(fConst->At(i));}
   const char *  GetJetsName()              const { return fJetsName.Data(); }
   Double_t      GetJetRadius()             const { return fRadius;}
   
@@ -32,6 +33,7 @@ class lwJetContainer : public TNamed {
   void     AddJet(lwJet *jet, Int_t pos);
   void     ClearVec()                           { fJets->Delete(); }
   void     ConnectConstituents(TClonesArray *c) { fConst = c;    }
+  void     SortJets()                           { fJets->Sort() ;}
   
  protected:
   TClonesArray          *fJets;     //  container with jets
