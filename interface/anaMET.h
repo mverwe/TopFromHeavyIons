@@ -46,10 +46,11 @@ public:
    metType           fMetType;              //matching type (defines where to store)
    Float_t           fMinPt;                //minimum pT of particles
    
-   TH2F            *fh2MetCent;            //!MET vs centrality
-   TH2F            *fh2SumEtCent;          //!SumEt vs centrality
-   TH3F            *fh3PtEtaPhi;           //!particle pt vs eta vs phi
-
-   ClassDef(anaMET,1)
+   TH2F             *fh2MetCent;            //!MET vs centrality
+   TH2F             *fh2SumEtCent;          //!SumEt vs centrality
+   TH3F             *fh3PtEtaPhi;           //!particle pt vs eta vs phi
+   TH2F             *fh2MetCentPtMin[10];   //!MET vs centrality for various min pt cuts
+   
+   ClassDef(anaMET,2)
 };
 #endif
