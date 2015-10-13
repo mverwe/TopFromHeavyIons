@@ -121,7 +121,7 @@ Int_t LWJetProducer::FindJets() {
   fjInputs.reserve(npart);
   
   for (int i = 0; i < npart; i++) {
-    pfParticle *fRecoParticle = static_cast<pfParticle*>(fConst->At(i));
+    particleBase *fRecoParticle = static_cast<particleBase*>(fConst->At(i));
     if(fRecoParticle->GetLorentzVector().Pt()<fPtMinConst) continue;
 
     fFastJetWrapper.AddInputVector(fRecoParticle->GetLorentzVector().Px(),
@@ -166,6 +166,7 @@ Int_t LWJetProducer::FindJets() {
       ++jetCount;
     }
   }
+  flwJetContainer->SortJets();
   //  Printf("Event had %d jets  %d",jetCount,(Int_t)fFastJetWrapper.GetInclusiveJets().size());
 
   return fFastJetWrapper.GetInclusiveJets().size();
