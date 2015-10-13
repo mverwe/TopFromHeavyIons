@@ -32,6 +32,9 @@ class particleBase : public TObject {
   Double_t       DeltaR(const particleBase* part) const;
   Double_t       DeltaRSquared(const particleBase* part) const;
   Double_t       DeltaRSquared(const particleBase part) const;
+
+  Int_t          Compare(const TObject *obj) const;
+  Bool_t         IsSortable() const { return kTRUE; }
   
  protected:
     TLorentzVector fLorentzVector;
@@ -40,6 +43,6 @@ class particleBase : public TObject {
     Int_t          fMatchId1;
     Int_t          fMatchId2;
 
-    ClassDef(particleBase,1)
+    ClassDef(particleBase,2)
 };
 #endif

@@ -93,3 +93,14 @@ Double_t particleBase::DeltaRSquared(const particleBase part) const
   dPhi = TVector2::Phi_mpi_pi(dPhi);
   return dPhi * dPhi + dEta * dEta;
 }
+
+//______________________________________________________________________________
+Int_t particleBase::Compare(const TObject *obj) const {
+  //make object sortable by pt
+  if(this==obj)
+    return 0;
+  if ( Pt() <  ((particleBase*)(obj))->Pt() )
+    return 1;
+  else
+    return -1;
+}
