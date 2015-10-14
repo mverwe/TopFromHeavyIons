@@ -31,9 +31,9 @@ class lwJetContainer : public TNamed {
   
   Bool_t   Init();
   void     AddJet(lwJet *jet, Int_t pos);
-  void     ClearVec()                           { fJets->Delete(); }
+  void     ClearVec()                           { if(fJets) fJets->Delete(); }
   void     ConnectConstituents(TClonesArray *c) { fConst = c;    }
-  void     SortJets()                           { fJets->Sort() ;}
+  void     SortJets()                           { if(fJets) fJets->Sort() ;}
   
  protected:
   TClonesArray          *fJets;     //  container with jets

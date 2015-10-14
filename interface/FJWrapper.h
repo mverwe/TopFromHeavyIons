@@ -204,7 +204,6 @@ FJWrapper::FJWrapper(const char *name, const char *title)
   , fMedUsedForBgSub   (0)
   , fUseArea4Vector    (kFALSE)
   , fBkrdEstimator     (0)
-      /*
   , fGenSubtractor     (0)
   , fGenSubtractorInfoJetMass ( )
   , fGenSubtractorInfoGRNum ( )
@@ -215,7 +214,6 @@ FJWrapper::FJWrapper(const char *name, const char *title)
   , fGenSubtractorInfoJetSigma2()
   , fGenSubtractorInfoJetConstituent ( )
   , fGenSubtractorInfoJetLeSub ( )
-      */
   , fDoFilterArea      (false)
   , fLegacyMode        (false)
   , fUseExternalBkg    (false)
@@ -246,7 +244,7 @@ FJWrapper::~FJWrapper()
   if (fClustSeqSA)        { delete fClustSeqSA;        fClustSeqSA        = 0; }
   if (fClustSeqActGhosts) { delete fClustSeqActGhosts; fClustSeqActGhosts = 0; }
   if (fBkrdEstimator)     delete fBkrdEstimator;
-  //if (fGenSubtractor)     delete fGenSubtractor;
+  if (fGenSubtractor)     delete fGenSubtractor;
 }
 
 //_________________________________________________________________________________________________
@@ -880,7 +878,7 @@ Int_t FJWrapper::DoConstituentSubtraction() {
   //Do constituent subtraction
   fj::contrib::ConstituentSubtractor *subtractor;
   if(fUseExternalBkg)
-    subtractor     = new fj::contrib::ConstituentSubtractor(fRho,fRhom,kFALSE,kTRUE);
+    subtractor     = new fj::contrib::ConstituentSubtractor(fRho,fRhom,0.,-1.);//kFALSE,kTRUE);
   else                 subtractor     = new fj::contrib::ConstituentSubtractor(fBkrdEstimator);
 
   //clear constituent subtracted jets

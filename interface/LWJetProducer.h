@@ -1,3 +1,4 @@
+
 #ifndef LWJetProducer_h
 #define LWJetProducer_h
 
@@ -13,6 +14,7 @@ class FJWrapper;
 #include "UserCode/TopFromHeavyIons/interface/inputBase.h"
 #include <UserCode/TopFromHeavyIons/interface/FJWrapper.h>
 #include <UserCode/TopFromHeavyIons/interface/lwJetContainer.h>
+#include <UserCode/TopFromHeavyIons/interface/rhoMap.h>
 
 namespace fastjet {
   class PseudoJet;
@@ -37,11 +39,17 @@ class LWJetProducer : public inputBase {
 
   void                   SetParticlesName(TString n) { fConstName     = n ; }
   void                   SetJetContName(TString n)   { flwJetContName = n ; }
+  void                   SetCSJetContName(TString n) { flwCSJetContName = n ; }
+  
   void                   SetJetType(UInt_t t)        { fJetType       = t ; }
   void                   SetRadius(Double_t r)       { fRadius        = r ; }
   void                   SetRecombScheme(Int_t s)    { fRecombScheme  = s ; }
   void                   SetGhostArea(Double_t gh)   { fGhostArea     = gh; }
   void                   SetPtMinConst(Double_t pt)  { fPtMinConst    = pt; } 
+
+  void                   SetDoConstituentSubtraction(Bool_t b) {fDoConstSubtraction = b;}
+  void                   SetRhoMapName(TString n)    { fRhoMapName    = n ; }
+  void                   SetRhoMMapName(TString n)   { fRhoMMapName   = n ; }
   
   UInt_t                 GetJetType()          const { return fJetType         ; }
   Double_t               GetRadius()           const { return fRadius          ; }
@@ -69,12 +77,21 @@ class LWJetProducer : public inputBase {
   lwJetContainer  *flwJetContainer;         //!lwJetContainer
   TString          flwJetContName;          // name of jet container
   FJWrapper        fFastJetWrapper;         //!fastjet wrapper
+
+  Bool_t           fDoConstSubtraction;     // do constituent subtraction
+  TString          fRhoMapName;             //rho map name
+  rhoMap          *fRhoMap;                 //!rho map
+  TString          fRhoMMapName;            //rhom map name
+  rhoMap          *fRhoMMap;                //!rhom map
+  lwJetContainer  *flwCSJetContainer;       //!lwJetContainer for constituent subtracted jets
+  TString          flwCSJetContName;        // name of constituent subtracted jet container
+
   
  private:
   LWJetProducer(const LWJetProducer& obj); // copy constructor
   LWJetProducer& operator=(const LWJetProducer& other); // assignment
   
-  ClassDef(LWJetProducer,1)
+  ClassDef(LWJetProducer,2)
 
 };
 #endif

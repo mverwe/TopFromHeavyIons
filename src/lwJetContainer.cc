@@ -22,7 +22,7 @@ lwJetContainer::lwJetContainer(const char *name) :
   TNamed(name,name),
   fJets(),
   fConst(),
-  fJetsName("jets"),
+  fJetsName(name),//"jets"),
   fRadius()
 {
   //standard constructor
