@@ -20,6 +20,7 @@ class rhoMap : public TNamed {
 
   Int_t    GetIndex(double e) const {return fMapToIndex(e);}
   Double_t GetValue(double e) const;// {return fMapToVal.at(fMapToIndex(e));}
+  Double_t GetValue(int index) const;
   
   icl::interval_map<double,int> GetMapToIndex() const {return fMapToIndex;}
   std::map<int,double>          GetMapToValue() const {return fMapToVal;}

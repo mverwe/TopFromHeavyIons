@@ -35,6 +35,13 @@ double rhoMap::GetValue(double e) const {
 }
 
 //__________________________________________________________
+double rhoMap::GetValue(int index) const {
+//get value from index
+  if(index>0 && index <= (int)fMapToVal.size()) return fMapToVal.at(index);
+  else                                          return -1.;
+}
+
+//__________________________________________________________
 void rhoMap::AddEtaRange(double etaMin, double etaMax, int index, double val) {
 
   fMapToIndex.add({ival::open(etaMin, etaMax), index}); //create interval
