@@ -234,17 +234,19 @@ FJWrapper::~FJWrapper()
 {  
   // Destructor.
 
-  delete fAreaDef;
-  delete fVorAreaSpec;
-  delete fGhostedAreaSpec;
-  delete fJetDef;
-  delete fPlugin;
-  delete fRange;
-  delete fClustSeq;
-  if (fClustSeqSA)        { delete fClustSeqSA;        fClustSeqSA        = 0; }
-  if (fClustSeqActGhosts) { delete fClustSeqActGhosts; fClustSeqActGhosts = 0; }
-  if (fBkrdEstimator)     delete fBkrdEstimator;
-  if (fGenSubtractor)     delete fGenSubtractor;
+  if (fAreaDef)                 { delete fAreaDef;           fAreaDef         = NULL; }
+  if (fVorAreaSpec)             { delete fVorAreaSpec;       fVorAreaSpec     = NULL; }
+  if (fGhostedAreaSpec)         { delete fGhostedAreaSpec;   fGhostedAreaSpec = NULL; }
+  if (fJetDef)                  { delete fJetDef;            fJetDef          = NULL; }
+  if (fPlugin)                  { delete fPlugin;            fPlugin          = NULL; }
+  if (fRange)                   { delete fRange;             fRange           = NULL; }
+  if (fClustSeq)                { delete fClustSeq;          fClustSeq        = NULL; }
+  if (fClustSeqSA)              { delete fClustSeqSA;        fClustSeqSA        = NULL; }
+  if (fClustSeqActGhosts)       { delete fClustSeqActGhosts; fClustSeqActGhosts = NULL; }
+  if (fBkrdEstimator)           { delete fBkrdEstimator;     fBkrdEstimator   = NULL; }
+  if (fGenSubtractor)           { delete fGenSubtractor;     fGenSubtractor   = NULL; }
+  // if (fConstituentSubtractor)   { delete fConstituentSubtractor; fConstituentSubtractor = NULL; }
+
 }
 
 //_________________________________________________________________________________________________
@@ -285,17 +287,18 @@ void FJWrapper::Clear(const Option_t */*opt*/)
   fMedUsedForBgSub = 0;
 
   // for the moment brute force delete everything
-  delete fAreaDef;         fAreaDef         = 0;
-  delete fVorAreaSpec;     fVorAreaSpec     = 0;
-  delete fGhostedAreaSpec; fGhostedAreaSpec = 0; 
-  delete fJetDef;          fJetDef          = 0;
-  delete fPlugin;          fPlugin          = 0;
-  delete fRange;           fRange           = 0;
-  delete fClustSeq;        fClustSeq        = 0;
-  if (fClustSeqSA)        { delete fClustSeqSA;        fClustSeqSA        = 0; }
-  if (fClustSeqActGhosts) { delete fClustSeqActGhosts; fClustSeqActGhosts = 0; }
-  if (fBkrdEstimator)     { delete fBkrdEstimator     ;  fBkrdEstimator     = 0;}
-  if (fGenSubtractor)     { delete fGenSubtractor     ;  fGenSubtractor     = 0;}
+  if (fAreaDef)                 { delete fAreaDef;           fAreaDef         = NULL; }
+  if (fVorAreaSpec)             { delete fVorAreaSpec;       fVorAreaSpec     = NULL; }
+  if (fGhostedAreaSpec)         { delete fGhostedAreaSpec;   fGhostedAreaSpec = NULL; }
+  if (fJetDef)                  { delete fJetDef;            fJetDef          = NULL; }
+  if (fPlugin)                  { delete fPlugin;            fPlugin          = NULL; }
+  if (fRange)                   { delete fRange;             fRange           = NULL; }
+  if (fClustSeq)                { delete fClustSeq;          fClustSeq        = NULL; }
+  if (fClustSeqSA)              { delete fClustSeqSA;        fClustSeqSA        = NULL; }
+  if (fClustSeqActGhosts)       { delete fClustSeqActGhosts; fClustSeqActGhosts = NULL; }
+  if (fBkrdEstimator)           { delete fBkrdEstimator;     fBkrdEstimator   = NULL; }
+  if (fGenSubtractor)           { delete fGenSubtractor;     fGenSubtractor   = NULL; }
+  // if (fConstituentSubtractor)   { delete fConstituentSubtractor; fConstituentSubtractor = NULL; }
 }
 
 //_________________________________________________________________________________________________
@@ -889,7 +892,7 @@ Int_t FJWrapper::DoConstituentSubtraction() {
       subtracted_jet = (*subtractor)(fInclusiveJets[i]);
     fConstituentSubtrJets.push_back(subtracted_jet);
   }
-  if(subtractor) delete subtractor;
+  if(subtractor) {delete subtractor; subtractor = 0; }
   
   return 0;
 }
