@@ -10,8 +10,10 @@ ClassImp(pfParticle)
 pfParticle::pfParticle() :
 particleBase(),
   fPupId(-1),
-  fPupAlpha(0),
+  fPupAlpha(-1),
+  fPupMetric2(-1),
   fPupWeight(0),
+  fPupWeight2(1),
   fPtVS(0.)
 {
   //default constructor
@@ -21,8 +23,10 @@ particleBase(),
 pfParticle::pfParticle(Double_t pt, Double_t eta, Double_t phi, Double_t m, Int_t id, Int_t c) :
   particleBase(pt,eta,phi,m,id,c),
   fPupId(-1),
-  fPupAlpha(0),
+  fPupAlpha(-1),
+  fPupMetric2(-1),
   fPupWeight(0),
+  fPupWeight2(1),
   fPtVS(0.)
 {
   //standard constructor
@@ -33,7 +37,9 @@ pfParticle::pfParticle(const pfParticle &obj) :
   particleBase(obj),
   fPupId(obj.fPupId),
   fPupAlpha(obj.fPupAlpha),
+  fPupMetric2(obj.fPupMetric2),
   fPupWeight(obj.fPupWeight),
+  fPupWeight2(obj.fPupWeight2),
   fPtVS(obj.fPtVS)
 {
   //copy constructor
@@ -46,10 +52,12 @@ pfParticle &pfParticle::operator=(const pfParticle &other)
 
   if(this!=&other) {
     pfParticle::operator=(other);
-    fPupId     = other.fPupId;
-    fPupAlpha  = other.fPupAlpha;
-    fPupWeight = other.fPupWeight;
-    fPtVS      = other.fPtVS;
+    fPupId      = other.fPupId;
+    fPupAlpha   = other.fPupAlpha;
+    fPupMetric2 = other.fPupMetric2;
+    fPupWeight  = other.fPupWeight;
+    fPupWeight2 = other.fPupWeight2;
+    fPtVS       = other.fPtVS;
   }
   return *this;
 }

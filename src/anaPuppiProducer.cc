@@ -18,6 +18,7 @@ anaPuppiProducer::anaPuppiProducer(const char *name, const char *title)
   fNExLJ(2),
   fMinPtExLJ(20.),
   fdRMaxJet(0.4),
+  fAddMetricType(kSumPt),
   fEvtName(""),
   fHiEvent(),
   fPFParticlesName(""),
@@ -26,7 +27,9 @@ anaPuppiProducer::anaPuppiProducer(const char *name, const char *title)
   fJetsCont(0x0),
   fMapEtaRanges(),
   fh2CentMedianAlpha(),
-  fh2CentRMSAlpha()
+  fh2CentRMSAlpha(),
+  fh2CentMedianMetric2(),
+  fh2CentRMSMetric2()
 {
 
   //Set default eta ranges
@@ -103,23 +106,35 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
    for (int i = 0; i < fPFParticles->GetEntriesFast(); i++) {
      pfParticle *p1 = static_cast<pfParticle*>(fPFParticles->At(i));
      Double_t var = 0.;
+     Double_t var2 = 0.;
+     TLorentzVector lsum(0.,0.,0.,0.);
      for (int j = 0; j < fPFParticles->GetEntriesFast(); j++) {
        if(i==j) continue;
        pfParticle *p2 = static_cast<pfParticle*>(fPFParticles->At(j));
        Double_t dr = p1->DeltaR(p2);
        if(dr>fConeRadius) continue;
        var += p2->Pt() /dr/dr;
+       if(fAddMetricType==kSumPt)
+         var2 += p2->Pt();
+       else if(fAddMetricType==kMass)
+         lsum+=p2->GetLorentzVector();
      }
      if(var!=0.) var = log(var);
      p1->SetPuppiAlpha(var);
+     if(fAddMetricType==kMass)
+       var2+=lsum.M();
+     p1->SetPuppiMetric2(var2);
    }//particles loop
 
    //calculation of median and RMS alpha in eta ranges
-   std::map<int,double> fMapMedianAlpha; //median alpha in eta regions
-   std::map<int,double> fMapRmsAlpha;    //rms alpha in eta regions
+   std::map<int,double> fMapMedianAlpha;   //median alpha in eta regions
+   std::map<int,double> fMapRmsAlpha;      //rms alpha in eta regions
+   std::map<int,double> fMapMedianMetric2; //median metric2 in eta regions
+   std::map<int,double> fMapRmsMetric2;    //rms metric2 in eta regions
    Int_t neta = (Int_t)fMapEtaRanges.size();
    for(Int_t ieta = 1; ieta<neta; ieta++) {
      static Double_t alphaArrExLJ[9999] = {0.};
+     static Double_t metric2ArrExLJ[9999] = {0.};
      Int_t count = 0;
 
      Double_t etaMin = fMapEtaRanges.at(ieta)+fConeRadius;
@@ -146,7 +161,8 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
 
          //Excluding regions close to leading detector-level jet
          if(drDet>fdRMaxJet) {
-           alphaArrExLJ[count] = p1->GetPuppiAlpha();//var;
+           alphaArrExLJ[count] = p1->GetPuppiAlpha();
+           metric2ArrExLJ[count] = p1->GetPuppiMetric2();
            count++;
          }
        }//eta selection
@@ -155,23 +171,43 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      static Int_t indexes[9999] = {-1};//indexes for sorting
      TMath::Sort(count,alphaArrExLJ,indexes);
      Double_t medAlpha = TMath::Median(count,alphaArrExLJ);
+     static Int_t indexes2[9999] = {-1};//indexes for sorting
+     TMath::Sort(count,metric2ArrExLJ,indexes2);
+     Double_t medMetric2 = TMath::Median(count,metric2ArrExLJ);
 
      //Calculate LHS RMS. LHS defined as all entries up to median
      Int_t nias = TMath::FloorNint((Double_t)count/2.);
-     Double_t rmsAlpha = 0.;
-     for(Int_t ia = nias; ia<count; ia++) { //taking entries starting from nias since sorted from high to low
-       Double_t alph = alphaArrExLJ[indexes[ia]];
-       if(alph>medAlpha) Printf("WARNING: alph (%f) larger than medAlpha (%f)",alph,medAlpha);
-       rmsAlpha += (alph - medAlpha)*(alph - medAlpha);
+     Double_t rmsAlpha   = 0.;
+     Double_t rmsMetric2 = 0.;
+     for(Int_t ia = 0; ia<count; ia++) { //taking entries starting from nias since sorted from high to low
+       Double_t alph = alphaArrExLJ[ia];//indexes[ia]];
+       if(alph<medAlpha)
+         rmsAlpha += (alph - medAlpha)*(alph - medAlpha);
+       
+       //      if(alph>medAlpha) Printf("WARNING: alph (%f) larger than medAlpha (%f)",alph,medAlpha);
+       
+       //metric2
+       Double_t metr2 = metric2ArrExLJ[ia];//indexes[ia]];
+       if(metr2<medMetric2) 
+         rmsMetric2 += (metr2 - medMetric2)*(metr2 - medMetric2);
+
+       //       if(metr2>medMetric2) Printf("WARNING: metr2 (%f) larger than medMetric2 (%f)",metr2,medMetric2);
+
      }
      if(rmsAlpha>0.) rmsAlpha = TMath::Sqrt(rmsAlpha/((double)nias));
+     if(rmsMetric2>0.) rmsMetric2 = TMath::Sqrt(rmsMetric2/((double)nias));
 
-     //Fill histograms
-     fh2CentMedianAlpha->Fill(cent,medAlpha);
-     fh2CentRMSAlpha->Fill(cent,rmsAlpha);
-
+     //Fill histograms, only for mid rapidity
+     if(ieta==3) {
+       fh2CentMedianAlpha->Fill(cent,medAlpha);
+       fh2CentRMSAlpha->Fill(cent,rmsAlpha);
+       fh2CentMedianMetric2->Fill(cent,medMetric2);
+       fh2CentRMSMetric2->Fill(cent,rmsMetric2);
+     }
      fMapMedianAlpha[ieta] = medAlpha;
      fMapRmsAlpha[ieta] = rmsAlpha;
+     fMapMedianMetric2[ieta] = medMetric2;
+     fMapRmsMetric2[ieta] = rmsMetric2;
      
    }//eta bins
      
@@ -188,11 +224,22 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      }
      Double_t medAlpha = fMapMedianAlpha[etaBin];
      Double_t rmsAlpha = fMapRmsAlpha[etaBin];
+     Double_t chiAlpha = 1.;
      if(rmsAlpha>0.) {
-       Double_t chii = (p1->GetPuppiAlpha() - medAlpha) * fabs(p1->GetPuppiAlpha() - medAlpha) / rmsAlpha / rmsAlpha;
-       prob = ROOT::Math::chisquared_cdf(chii,1.);
+       chiAlpha = (p1->GetPuppiAlpha() - medAlpha) * fabs(p1->GetPuppiAlpha() - medAlpha) / rmsAlpha / rmsAlpha;
+       prob = ROOT::Math::chisquared_cdf(chiAlpha,1.);
      }
      p1->SetPuppiWeight(prob);
+
+     //weight metric2
+     Double_t medMetric2 = fMapMedianMetric2[etaBin];
+     Double_t rmsMetric2 = fMapRmsMetric2[etaBin];
+     if(rmsMetric2>0.) {
+       Double_t chiMetric2 = (p1->GetPuppiMetric2() - medMetric2) * fabs(p1->GetPuppiMetric2() - medMetric2) / rmsMetric2 / rmsMetric2;
+       Double_t chii = chiAlpha + chiMetric2;
+       prob = ROOT::Math::chisquared_cdf(chii,2.);
+     }
+     p1->SetPuppiWeight2(prob);
    }
 }
 
@@ -211,4 +258,10 @@ void anaPuppiProducer::CreateOutputObjects() {
 
   fh2CentRMSAlpha = new TH2F("fh2CentRMSAlpha","fh2CentRMSAlpha;centrality (%);RMS{#alpha}",10,0,100,40,0,4);
   fOutput->Add(fh2CentRMSAlpha);
+
+  fh2CentMedianMetric2 = new TH2F("fh2CentMedianMetric2","fh2CentMedianMetric2;centrality (%);med{metric2}",10,0,100,100,0,100);
+  fOutput->Add(fh2CentMedianMetric2);
+
+  fh2CentRMSMetric2 = new TH2F("fh2CentRMSMetric2","fh2CentRMSMetric2;centrality (%);RMS{metric2}",10,0,100,30,0,30);
+  fOutput->Add(fh2CentRMSMetric2);
 }
