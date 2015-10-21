@@ -107,6 +107,7 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
   pupProd->SetHiEvtName("hiEventContainer");
   pupProd->SetPFPartName("pfParticles");
   pupProd->SetJetsName("aktPUR030");
+  pupProd->SetAddMetricType(anaPuppiProducer::kMass);
   if(doPuppi) handler->Add(pupProd);
 
   anaPuppiParticles *pupAna = new anaPuppiParticles("pupAna","pupAna");
@@ -119,10 +120,8 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
   //Initialization of all analysis modules
 
   //---------------------------------------------------------------
-  //output tree
-  //  TTree *tree_out = new TTree("tree_out","lwTree");
-  //tree_out->Branch("EventObjects",&fEventObjects);
-	  
+  //Event loop
+  //---------------------------------------------------------------	  
   Long64_t entries_tot =  chain->GetEntriesFast(); //93064
   if(nentries<0) nentries = chain->GetEntries();
   // Long64_t nentries = 20;//chain->GetEntriesFast();
@@ -136,8 +135,6 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
 	    
     //Execute all analysis tasks
     handler->ExecuteTask();
-
-    //tree_out->Fill();
   }
     
   fEventObjects->Print();

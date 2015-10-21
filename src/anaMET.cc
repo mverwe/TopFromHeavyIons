@@ -64,7 +64,7 @@ void anaMET::Exec(Option_t * /*option*/)
    Double_t sumEt = 0.;
 
    const Int_t nptmin = 10;
-   Double_t ptarr[nptmin] {0.,1.,2.,3.,5.,10.,15.,20.,30.,40.};
+   Double_t ptarr[nptmin] {0.,1.,2.,3.,10.,20.,30.,40.,50.,60.};
    TLorentzVector r4[nptmin];
    for(Int_t j = 0; j<nptmin; ++j)
      r4[j].SetPtEtaPhiM(0.,0.,0.,0.);
@@ -77,8 +77,8 @@ void anaMET::Exec(Option_t * /*option*/)
      }
      TLorentzVector l;
      if(fMetType==kGen || fMetType==kPFRaw) {
-       if(p->Pt() < fMinPt)
-         continue;
+     //  if(p->Pt() < fMinPt)
+       //  continue;
        l = p->GetLorentzVector();
      }
      else if(fMetType==kVS) {
@@ -98,16 +98,16 @@ void anaMET::Exec(Option_t * /*option*/)
        l = pf->GetPuppiWeight()*p->GetLorentzVector();
      }
      
-     if(l.Pt() < fMinPt) continue;
-     fh3PtEtaPhi->Fill(l.Pt(),l.Eta(),l.Phi());
-     p4+=l;
-     sumEt+=l.Et();
-
      for(Int_t j = 0; j<nptmin; ++j) {
        if(l.Pt()>ptarr[j])
          r4[j]+=l;
      }
-     
+    
+     if(l.Pt() < fMinPt) continue;
+     fh3PtEtaPhi->Fill(l.Pt(),l.Eta(),l.Phi());
+     p4+=l;
+     sumEt+=l.Et();
+ 
    }//particle loop
 
    TLorentzVector met = -p4;

@@ -276,6 +276,8 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
     muonIsoAreaBjet->SetHiEvtName("hiEventContainer");
 
     muonIsoAreaBjet->SetPFPartName("pfParticles");
+    muonIsoAreaBjet->SetMuonsName("lwMuonsReco");
+    muonIsoAreaBjet->SetMuonsGenName("lwMuonsGene");
     muonIsoAreaBjet->SetIsolationType(anaMuonIsolation::kArea);
     muonIsoAreaBjet->SetRhoMapName("rhoMap");
     muonIsoAreaBjet->SetCheckBjet(kTRUE);

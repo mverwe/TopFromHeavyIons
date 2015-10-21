@@ -22,11 +22,12 @@ class anaMuonIsolation : public anaBaseTask {
    
 public:
   enum isolationType {
-    kRaw  = 0,
-    kArea = 1,
-    kVS   = 2,
-    kCS   = 3,
-    kPuppi = 4
+    kRaw    = 0,
+    kArea   = 1,
+    kVS     = 2,
+    kCS     = 3,
+    kPuppi  = 4,
+    kPuppi2 = 5
   };
   
    anaMuonIsolation() {;}

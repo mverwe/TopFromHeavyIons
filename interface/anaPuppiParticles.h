@@ -52,7 +52,17 @@ public:
   TH2F             *fh2Weight2CentAll;     //!weight2 vs centrality
   TH2F             *fh2Weight2CentUE;      //!weight2 vs centrality
   TH2F             *fh2Weight2CentJet;     //!weight2 vs centrality
-   
-   ClassDef(anaPuppiParticles,1)
+  TH2F             *fh2Weight3CentAll;     //!weight3 vs centrality
+  TH2F             *fh2Weight3CentUE;      //!weight3 vs centrality
+  TH2F             *fh2Weight3CentJet;     //!weight3 vs centrality
+  TH2F             *fh2Weight4CentAll;     //!weight4 vs centrality
+  TH2F             *fh2Weight4CentUE;      //!weight4 vs centrality
+  TH2F             *fh2Weight4CentJet;     //!weight4 vs centrality
+
+  TH3F             *fh3AlphaMetric2CentAll;     //!alpha vs metric2 vs centrality
+  TH3F             *fh3AlphaMetric2CentUE;      //!alpha vs metric2 vs centrality
+  TH3F             *fh3AlphaMetric2CentJet;     //!alpha vs metric2 vs centrality
+  
+  ClassDef(anaPuppiParticles,1)
 };
 #endif

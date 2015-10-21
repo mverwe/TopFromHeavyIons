@@ -134,8 +134,10 @@ void anaMuonIsolation::Exec(Option_t * /*option*/)
          conePt+=pfp->PtVS();
          if(pfp->PtVS()>ptlead) ptlead = pfp->PtVS();
        }
-       else if(fIsolationType==kPuppi)  {
-         Double_t pt = pfp->Pt()*pfp->GetPuppiWeight();
+       else if(fIsolationType==kPuppi || fIsolationType==kPuppi2)  {
+         Double_t weight = pfp->GetPuppiWeight();
+         if(fIsolationType==kPuppi2) weight = pfp->GetPuppiWeight2();
+         Double_t pt = pfp->Pt()*weight;
          conePt+=pt;
          if(pt>ptlead) ptlead = pt;
        }
@@ -329,7 +331,7 @@ void anaMuonIsolation::CreateOutputObjects() {
     return;
   }
 
-  fh2CentIso = new TH2F("fh2CentIso","fh2CentIso;centrality (%);p_{T,cone}/p_{T,muon}",100,0,100,600,-1.,5.);
+  fh2CentIso = new TH2F("fh2CentIso","fh2CentIso;centrality (%);p_{T,cone}/p_{T,muon}",100,0,100,400,-3.,5.);
   fOutput->Add(fh2CentIso);
 
   TString histName = "";

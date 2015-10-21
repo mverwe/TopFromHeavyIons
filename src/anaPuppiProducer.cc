@@ -234,12 +234,15 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      //weight metric2
      Double_t medMetric2 = fMapMedianMetric2[etaBin];
      Double_t rmsMetric2 = fMapRmsMetric2[etaBin];
+     Double_t prob2 = 1.;
      if(rmsMetric2>0.) {
        Double_t chiMetric2 = (p1->GetPuppiMetric2() - medMetric2) * fabs(p1->GetPuppiMetric2() - medMetric2) / rmsMetric2 / rmsMetric2;
        Double_t chii = chiAlpha + chiMetric2;
        prob = ROOT::Math::chisquared_cdf(chii,2.);
+       prob2= ROOT::Math::chisquared_cdf(chiMetric2,1.);
      }
      p1->SetPuppiWeight2(prob);
+     p1->SetPuppiWeight3(prob2);
    }
 }
 

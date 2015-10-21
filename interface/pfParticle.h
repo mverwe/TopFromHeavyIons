@@ -21,6 +21,7 @@ class pfParticle : public particleBase {
   void           SetPuppiMetric2(Double_t a)  { fPupMetric2 = a;}
   void           SetPuppiWeight(Double_t w)   { fPupWeight = w; }
   void           SetPuppiWeight2(Double_t w)  { fPupWeight2= w; }
+  void           SetPuppiWeight3(Double_t w)  { fPupWeight3= w; }
   void           SetPtVS(Double_t pt)         { fPtVS  = pt;    }
   
   Int_t          GetPuppiId() const      { return fPupId; }
@@ -28,6 +29,7 @@ class pfParticle : public particleBase {
   Double_t       GetPuppiMetric2() const { return fPupMetric2;}
   Double_t       GetPuppiWeight() const  { return fPupWeight; }
   Double_t       GetPuppiWeight2() const { return fPupWeight2;}
+  Double_t       GetPuppiWeight3() const { return fPupWeight3;}
   Double_t       PtVS()       const      { return fPtVS;  } 
 
  protected:
@@ -36,6 +38,7 @@ class pfParticle : public particleBase {
   Double_t       fPupMetric2;  //puppi alpha
   Double_t       fPupWeight;   //puppi weight
   Double_t       fPupWeight2;  //puppi weight2
+  Double_t       fPupWeight3;  //puppi weight3
   Double_t       fPtVS;        //subtracted pt from HF-Voronoi algo
   
   ClassDef(pfParticle,2)

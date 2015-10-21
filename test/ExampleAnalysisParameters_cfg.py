@@ -27,8 +27,8 @@ centralityRequirements={"inc":[0,200],
                         "80to100":[160,200]}
 
 
-sample=tt_PbPb
-#sample=DY_PbPb
+#sample=tt_PbPb
+sample=DY_PbPb
 
 centralityBins=centralityRequirements["inc"]
 #centralityBins=centralityRequirements["0to20"]
@@ -39,7 +39,7 @@ centralityBins=centralityRequirements["inc"]
 config = cms.PSet(
     output = cms.string('cen_%dto%d_%s'%(centralityBins[0],centralityBins[1],sample[0])),
     input  = cms.vstring( fillFromStore(sample[1]) ),
-    maxEvents = cms.int32(100),#-1),
+    maxEvents = cms.int32(500),#-1),
     minCentrality = cms.int32(centralityBins[0]),
     maxCentrality = cms.int32(centralityBins[1])#,
    # anaFile = cms.int32(options.anaFile)

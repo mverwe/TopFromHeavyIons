@@ -10,5 +10,6 @@
 <environment>
   <bin name="runHITopAnalysis"       file="runHITopAnalysis.cc"></bin>
   <bin name="runExample"             file="runExample.cc"></bin>
+  <bin name="runPuppiAna"            file="runPuppiAna.cc"></bin>
 </environment>
 <Flags CXXFLAGS="-g"/>

@@ -29,8 +29,16 @@ anaPuppiParticles::anaPuppiParticles(const char *name, const char *title)
   fh2WeightCentJet(),
   fh2Weight2CentAll(),
   fh2Weight2CentUE(),
-  fh2Weight2CentJet()
-  
+  fh2Weight2CentJet(),
+  fh2Weight3CentAll(),
+  fh2Weight3CentUE(),
+  fh2Weight3CentJet(),
+  fh2Weight4CentAll(),
+  fh2Weight4CentUE(),
+  fh2Weight4CentJet(),
+  fh3AlphaMetric2CentAll(),
+  fh3AlphaMetric2CentUE(),
+  fh3AlphaMetric2CentJet()
 {
 
 }
@@ -86,7 +94,7 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
      }
 
      //only QA particle at midrapidity for now. TODO
-     if(abs(p->Eta())<2.1) continue;
+     if(abs(p->Eta())>2.1) continue;
 
      //check distance to closest signal jet
      Double_t drMin = 999.;
@@ -110,11 +118,17 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
      fh2Metric2CentAll->Fill(cent,p->GetPuppiMetric2());
      fh2WeightCentAll->Fill(cent,p->GetPuppiWeight());
      fh2Weight2CentAll->Fill(cent,p->GetPuppiWeight2());
+     fh2Weight3CentAll->Fill(cent,p->GetPuppiWeight3());
+     fh2Weight4CentAll->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());
+     fh3AlphaMetric2CentAll->Fill(cent,p->GetPuppiAlpha(),p->GetPuppiMetric2());
      if(drMin<0.4) { //jetty region
        fh2AlphaCentJet->Fill(cent,p->GetPuppiAlpha());
        fh2Metric2CentJet->Fill(cent,p->GetPuppiMetric2());
        fh2WeightCentJet->Fill(cent,p->GetPuppiWeight());
        fh2Weight2CentJet->Fill(cent,p->GetPuppiWeight2());
+       fh2Weight3CentJet->Fill(cent,p->GetPuppiWeight3());
+       fh2Weight4CentJet->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());
+       fh3AlphaMetric2CentJet->Fill(cent,p->GetPuppiAlpha(),p->GetPuppiMetric2());
      }
 
      //UE region
@@ -123,11 +137,11 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
        fh2Metric2CentUE->Fill(cent,p->GetPuppiMetric2());
        fh2WeightCentUE->Fill(cent,p->GetPuppiWeight());
        fh2Weight2CentUE->Fill(cent,p->GetPuppiWeight2());
+       fh2Weight3CentUE->Fill(cent,p->GetPuppiWeight3());
+       fh2Weight4CentUE->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());
+       fh3AlphaMetric2CentUE->Fill(cent,p->GetPuppiAlpha(),p->GetPuppiMetric2());
      }
-   
    }
-     
-
 }
 
 //----------------------------------------------------------
@@ -149,31 +163,58 @@ void anaPuppiParticles::CreateOutputObjects() {
   fh2AlphaCentJet = new TH2F("fh2AlphaCentJet","fh2AlphaCentJet;centrality;#alpha",100,0,100,40,0,20.);
   fOutput->Add(fh2AlphaCentJet);
 
-  fh2Metric2CentAll = new TH2F("fh2Metric2CentAll","fh2Metric2CentAll;centrality;metric2",100,0,100,100,0.,100.);
+  fh2Metric2CentAll = new TH2F("fh2Metric2CentAll","fh2Metric2CentAll;centrality;metric2",100,0,100,200,0.,200.);
   fOutput->Add(fh2Metric2CentAll);
   
-  fh2Metric2CentUE = new TH2F("fh2Metric2CentUE","fh2Metric2CentUE;centrality;metric2",100,0,100,100,0.,100.);
+  fh2Metric2CentUE = new TH2F("fh2Metric2CentUE","fh2Metric2CentUE;centrality;metric2",100,0,100,200,0.,200.);
   fOutput->Add(fh2Metric2CentUE);
   
-  fh2Metric2CentJet = new TH2F("fh2Metric2CentJet","fh2Metric2CentJet;centrality;metric2",100,0,100,100,0.,100.);
+  fh2Metric2CentJet = new TH2F("fh2Metric2CentJet","fh2Metric2CentJet;centrality;metric2",100,0,100,100,0.,200.);
   fOutput->Add(fh2Metric2CentJet);
 
-  fh2WeightCentAll = new TH2F("fh2WeightCentAll","fh2WeightCentAll;centrality;weight",100,0,100,101,0.,1.01);
+  fh2WeightCentAll = new TH2F("fh2WeightCentAll","fh2WeightCentAll;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2WeightCentAll);
   
-  fh2WeightCentUE = new TH2F("fh2WeightCentUE","fh2WeightCentUE;centrality;weight",100,0,100,101,0.,1.01);
+  fh2WeightCentUE = new TH2F("fh2WeightCentUE","fh2WeightCentUE;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2WeightCentUE);
   
-  fh2WeightCentJet = new TH2F("fh2WeightCentJet","fh2WeightCentJet;centrality;weight",100,0,100,101,0.,1.01);
+  fh2WeightCentJet = new TH2F("fh2WeightCentJet","fh2WeightCentJet;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2WeightCentJet);
 
-  fh2Weight2CentAll = new TH2F("fh2Weight2CentAll","fh2Weight2CentAll;centrality;weight",100,0,100,101,0.,1.01);
+  fh2Weight2CentAll = new TH2F("fh2Weight2CentAll","fh2Weight2CentAll;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2Weight2CentAll);
   
-  fh2Weight2CentUE = new TH2F("fh2Weight2CentUE","fh2Weight2CentUE;centrality;weight",100,0,100,101,0.,1.01);
+  fh2Weight2CentUE = new TH2F("fh2Weight2CentUE","fh2Weight2CentUE;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2Weight2CentUE);
   
-  fh2Weight2CentJet = new TH2F("fh2Weight2CentJet","fh2Weight2CentJet;centrality;weight",100,0,100,101,0.,1.01);
+  fh2Weight2CentJet = new TH2F("fh2Weight2CentJet","fh2Weight2CentJet;centrality;weight",100,0,100,102,0.,1.02);
   fOutput->Add(fh2Weight2CentJet);
+
+  fh2Weight3CentAll = new TH2F("fh2Weight3CentAll","fh2Weight3CentAll;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight3CentAll);
+  
+  fh2Weight3CentUE = new TH2F("fh2Weight3CentUE","fh2Weight3CentUE;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight3CentUE);
+  
+  fh2Weight3CentJet = new TH2F("fh2Weight3CentJet","fh2Weight3CentJet;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight3CentJet);
+
+  fh2Weight4CentAll = new TH2F("fh2Weight4CentAll","fh2Weight4CentAll;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight4CentAll);
+  
+  fh2Weight4CentUE = new TH2F("fh2Weight4CentUE","fh2Weight4CentUE;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight4CentUE);
+  
+  fh2Weight4CentJet = new TH2F("fh2Weight4CentJet","fh2Weight4CentJet;centrality;weight",100,0,100,102,0.,1.02);
+  fOutput->Add(fh2Weight4CentJet);
+
+  fh3AlphaMetric2CentAll = new TH3F("fh3AlphaMetric2CentAll","fh3AlphaMetric2CentAll;centrality;#alpha;metric2",100,0,100,40,0,20,200,0.,200.);
+  fOutput->Add(fh3AlphaMetric2CentAll);
+  
+  fh3AlphaMetric2CentUE = new TH3F("fh3AlphaMetric2CentUE","fh3AlphaMetric2CentUE;centrality;#alpha;metric2",100,0,100,40,0,20,200,0.,200.);
+  fOutput->Add(fh3AlphaMetric2CentUE);
+  
+  fh3AlphaMetric2CentJet = new TH3F("fh3AlphaMetric2CentJet","fh3AlphaMetric2CentJet;centrality;#alpha;metric2",100,0,100,40,0,20,100,0.,200.);
+  fOutput->Add(fh3AlphaMetric2CentJet);
   
 }
