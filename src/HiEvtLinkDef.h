@@ -26,6 +26,7 @@
 #include "UserCode/TopFromHeavyIons/interface/LWJetProducer.h"
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
+#include "UserCode/TopFromHeavyIons/interface/anaJetMatching.h"
 #include "UserCode/TopFromHeavyIons/interface/anaJetQA.h"
 #include "UserCode/TopFromHeavyIons/interface/anaMET.h"
 #include "UserCode/TopFromHeavyIons/interface/anaMuonIsolation.h"
@@ -69,6 +70,7 @@
 #pragma link C++ class LWJetProducer;
 
 #pragma link C++ class anaBaseTask;
+#pragma link C++ class anaJetMatching;
 #pragma link C++ class anaJetQA;
 #pragma link C++ class anaMET;
 #pragma link C++ class anaMuonIsolation;

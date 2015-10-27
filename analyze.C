@@ -106,10 +106,39 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   p_PUJet->SetEventObjects(fEventObjects);
 
   
+  //---------------------------------------------------------------
+  //analysis modules
+  //
+
+  //handler to which all modules will be added
+  anaBaseTask *handler = new anaBaseTask("handler","handler");
+
+  //analysis modules which also produce
+  //kt jet finder
+  LWJetProducer *lwjkt = new LWJetProducer("LWJetProducerKTR020","LWJetProducerKTR020");
+  //lwjkt->SetInput(chain);
+  lwjkt->ConnectEventObject(fEventObjects);
+  lwjkt->SetJetType(LWJetProducer::kKT);
+  lwjkt->SetRadius(0.2);
+  lwjkt->SetGhostArea(0.005);
+  lwjkt->SetPtMinConst(0.);
+  lwjkt->SetParticlesName("pfParticles");
+  lwjkt->SetJetContName("JetsKTR020");
+  lwjkt->SetDoConstituentSubtraction(kFALSE);
+  handler->Add(lwjkt);
+
+  anaRhoProducer *rhoProd = new anaRhoProducer("anaRhoProducerKTR020","anaRhoProducerKTR020");
+  rhoProd->ConnectEventObject(fEventObjects);
+  rhoProd->SetJetsName("JetsKTR020");
+  rhoProd->SetHiEvtName("hiEventContainer");
+  rhoProd->SetNExcl(2);
+  rhoProd->SetEtaRangeAll(-5.+0.2,5.-0.2);
+  handler->Add(rhoProd);
+
   //anti-kt jet finder on reconstructed pf candidates
-  LWJetProducer *lwjakt = new LWJetProducer("LWJetProducerAKTR030");
-  lwjakt->SetInput(chain);
-  lwjakt->SetEventObjects(fEventObjects);
+  LWJetProducer *lwjakt = new LWJetProducer("LWJetProducerAKTR030","LWJetProducerAKTR030");
+  //lwjakt->SetInput(chain);
+  lwjakt->ConnectEventObject(fEventObjects);
   lwjakt->SetJetType(LWJetProducer::kAKT);
   lwjakt->SetRadius(0.3);
   lwjakt->SetGhostArea(0.005);
@@ -120,11 +149,12 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   lwjakt->SetDoConstituentSubtraction(kTRUE);
   lwjakt->SetRhoMapName("rhoMap");
   lwjakt->SetRhoMMapName("rhoMMap");
+  handler->Add(lwjakt);
 
   //anti-kt jet finder on reconstructed pf candidates
-  LWJetProducer *lwjaktGen = new LWJetProducer("LWGenJetProducerAKTR030");
-  lwjaktGen->SetInput(chain);
-  lwjaktGen->SetEventObjects(fEventObjects);
+  LWJetProducer *lwjaktGen = new LWJetProducer("LWGenJetProducerAKTR030","LWGenJetProducerAKTR030");
+  //lwjaktGen->SetInput(chain);
+  lwjaktGen->ConnectEventObject(fEventObjects);
   lwjaktGen->SetJetType(LWJetProducer::kAKT);
   lwjaktGen->SetRadius(0.3);
   lwjaktGen->SetGhostArea(0.005);
@@ -132,36 +162,8 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   lwjaktGen->SetParticlesName("genParticles");
   lwjaktGen->SetJetContName("GenJetsAKTR030");
   lwjaktGen->SetDoConstituentSubtraction(kFALSE);
-
-  //kt jet finder
-  LWJetProducer *lwjkt = new LWJetProducer("LWJetProducerKTR020");
-  lwjkt->SetInput(chain);
-  lwjkt->SetEventObjects(fEventObjects);
-  lwjkt->SetJetType(LWJetProducer::kKT);
-  lwjkt->SetRadius(0.2);
-  lwjkt->SetGhostArea(0.005);
-  lwjkt->SetPtMinConst(0.);
-  lwjkt->SetParticlesName("pfParticles");
-  lwjkt->SetJetContName("JetsKTR020");
-  lwjkt->SetDoConstituentSubtraction(kFALSE);
-	 
-
-  //---------------------------------------------------------------
-  //analysis modules
-  //
-
-  //handler to which all modules will be added
-  anaBaseTask *handler = new anaBaseTask("handler","handler");
-
-  //analysis modules which also produce
-  anaRhoProducer *rhoProd = new anaRhoProducer("anaRhoProducerKTR020","anaRhoProducerKTR020");
-  rhoProd->ConnectEventObject(fEventObjects);
-  rhoProd->SetJetsName("JetsKTR020");
-  rhoProd->SetHiEvtName("hiEventContainer");
-  rhoProd->SetNExcl(2);
-  rhoProd->SetEtaRangeAll(-5.+0.2,5.-0.2);
-  //handler->Add(rhoProd);
-	  
+  handler->Add(lwjaktGen);
+  
   anaPuppiProducer *pupProd = new anaPuppiProducer("pupProd","pupProd");
   pupProd->ConnectEventObject(fEventObjects);
   pupProd->SetHiEvtName("hiEventContainer");
@@ -437,12 +439,12 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
     p_gen->Run(jentry);    //generated particles
     p_PUJet->Run(jentry); //forest jets
 	    
-    lwjkt->FindJets();   //kt jets
-    lwjaktGen->FindJets(); //akt gen jets
+    // lwjkt->FindJets();   //kt jets
+    // lwjaktGen->FindJets(); //akt gen jets
 	   
-    //akt jets with constituent subtraction
-    rhoProd->Exec();
-    lwjakt->FindJets();
+    // //akt jets with constituent subtraction
+    // rhoProd->Exec();
+    // lwjakt->FindJets();
          
     //Execute all analysis tasks
     handler->ExecuteTask();
@@ -458,7 +460,7 @@ void analyze(std::vector<std::string> urls, const char *outname = "eventObjects.
   TIter next(tasks);
   anaBaseTask *obj;
   while ((obj = dynamic_cast<anaBaseTask*>(next()) ))
-    obj->GetOutput()->Write(obj->GetName(),TObject::kSingleKey);
+    if(obj->GetOutput()) obj->GetOutput()->Write(obj->GetName(),TObject::kSingleKey);
   
   out->Write();
   out->Close();

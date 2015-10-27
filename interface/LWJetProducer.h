@@ -1,4 +1,3 @@
-
 #ifndef LWJetProducer_h
 #define LWJetProducer_h
 
@@ -11,7 +10,7 @@ class FJWrapper;
 #include <TNamed.h>
 #include <TClonesArray.h>
 
-#include "UserCode/TopFromHeavyIons/interface/inputBase.h"
+#include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
 #include <UserCode/TopFromHeavyIons/interface/FJWrapper.h>
 #include <UserCode/TopFromHeavyIons/interface/lwJetContainer.h>
 #include <UserCode/TopFromHeavyIons/interface/rhoMap.h>
@@ -24,7 +23,7 @@ namespace fastjet {
 // Light-weight jet producer
 //
 
-class LWJetProducer : public inputBase {
+class LWJetProducer : public anaBaseTask {
  public:
 
   enum JetType {
@@ -34,9 +33,15 @@ class LWJetProducer : public inputBase {
   };
   
   LWJetProducer();
-  LWJetProducer(const char *name);
+  LWJetProducer(const char *name, const char* title);
   virtual ~LWJetProducer() {;}
 
+  void Exec(Option_t *option="");
+  void CreateOutputObjects() {;}
+
+  Bool_t Init();
+  Int_t  FindJets();
+  
   void                   SetParticlesName(TString n) { fConstName     = n ; }
   void                   SetJetContName(TString n)   { flwJetContName = n ; }
   void                   SetCSJetContName(TString n) { flwCSJetContName = n ; }
@@ -56,9 +61,7 @@ class LWJetProducer : public inputBase {
   Int_t                  GetRecombScheme()     const { return fRecombScheme    ; }
   lwJetContainer        *GetJetContainer()     const { return flwJetContainer  ; }
     
-  Bool_t Init();
-  Int_t  FindJets();
-  
+
  protected:
   Bool_t           GetSortedArray(Int_t indexes[], std::vector<fastjet::PseudoJet> array) const;
   
@@ -91,7 +94,7 @@ class LWJetProducer : public inputBase {
   LWJetProducer(const LWJetProducer& obj); // copy constructor
   LWJetProducer& operator=(const LWJetProducer& other); // assignment
   
-  ClassDef(LWJetProducer,2)
+  ClassDef(LWJetProducer,3)
 
 };
 #endif

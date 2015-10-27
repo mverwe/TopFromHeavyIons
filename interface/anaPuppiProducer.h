@@ -36,6 +36,7 @@ public:
    void SetHiEvtName(TString name)    { fEvtName  = name ; }
    void SetPFPartName(TString name)   { fPFParticlesName = name ; }
    void SetJetsName(TString name)     { fJetsName = name ; }
+   void SetPuppiPartName(TString name)   { fPuppiParticlesName = name ; }
 
    void SetConeRadius(Double_t r)          { fConeRadius = r; }
    void SetNExLJ(Int_t i)                  { fNExLJ      = i; }
@@ -57,13 +58,15 @@ public:
    TClonesArray     *fPFParticles;      //!pf candidates array
    TString           fJetsName;         //name of jet array
    lwJetContainer   *fJetsCont;         //!jet container
-   std::map<int,double> fMapEtaRanges;  //eta ranges
+   TString           fPuppiParticlesName; //name of array with puppi particles
+   TClonesArray     *fPuppiParticles;     //!puppi candidates array
+   std::map<int,double> fMapEtaRanges;    //eta ranges
    
    TH2F             *fh2CentMedianAlpha;   //!centrality vs median alpha
    TH2F             *fh2CentRMSAlpha;      //!centrality vs median alpha
    TH2F             *fh2CentMedianMetric2; //!centrality vs median metric2
    TH2F             *fh2CentRMSMetric2;    //!centrality vs median metric2
    
-   ClassDef(anaPuppiProducer,2)
+   ClassDef(anaPuppiProducer,3)
 };
 #endif

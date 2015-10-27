@@ -25,6 +25,8 @@ anaPuppiProducer::anaPuppiProducer(const char *name, const char *title)
   fPFParticles(0x0),
   fJetsName(""),
   fJetsCont(0x0),
+  fPuppiParticlesName(""),
+  fPuppiParticles(0x0),
   fMapEtaRanges(),
   fh2CentMedianAlpha(),
   fh2CentRMSAlpha(),
@@ -77,6 +79,16 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      fPFParticles = dynamic_cast<TClonesArray*>(fEventObjects->FindObject(fPFParticlesName.Data()));
    }
    if(!fPFParticles) return;
+
+   //Make array for puppi particles
+   if(!fPuppiParticlesName.IsNull()) {
+     if(!fEventObjects->FindObject(fPuppiParticlesName) && !fPuppiParticles) {
+       fPuppiParticles = new TClonesArray("pfParticle");
+       fPuppiParticles->SetName(fPuppiParticlesName);
+       fEventObjects->Add(fPuppiParticles);
+     }
+   }
+   if(fPuppiParticles) fPuppiParticles->Delete();
 
    //Determine centrality bin
    Double_t cent = fHiEvent->GetCentrality();
@@ -212,6 +224,7 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
    }//eta bins
      
    //Set puppi weight for each particle
+   Int_t npup = 0;
    for (int i = 0; i < fPFParticles->GetEntriesFast(); i++) {
      pfParticle *p1 = static_cast<pfParticle*>(fPFParticles->At(i));
      Double_t prob = 1.;
@@ -231,6 +244,19 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      }
      p1->SetPuppiWeight(prob);
 
+     //put puppi weighted particles in array
+     double ptpup = prob*p1->Pt();
+     if(fPuppiParticles && ptpup>1e-4) {
+       pfParticle *pPart = new ((*fPuppiParticles)[npup])
+         pfParticle(prob*p1->Pt(),
+                    p1->Eta(),
+                    p1->Phi(),
+                    prob*p1->M(),
+                    p1->GetId());
+       pPart->SetCharge(p1->GetCharge());
+       ++npup;
+     }
+     
      //weight metric2
      Double_t medMetric2 = fMapMedianMetric2[etaBin];
      Double_t rmsMetric2 = fMapRmsMetric2[etaBin];

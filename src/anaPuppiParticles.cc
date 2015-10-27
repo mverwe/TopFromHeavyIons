@@ -116,7 +116,8 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
      //store puppi metrics and weights for different regions
      fh2AlphaCentAll->Fill(cent,p->GetPuppiAlpha());
      fh2Metric2CentAll->Fill(cent,p->GetPuppiMetric2());
-     fh2WeightCentAll->Fill(cent,p->GetPuppiWeight());
+
+     if((p->Pt()*p->GetPuppiWeight()) > fMinPt) fh2WeightCentAll->Fill(cent,p->GetPuppiWeight());
      fh2Weight2CentAll->Fill(cent,p->GetPuppiWeight2());
      fh2Weight3CentAll->Fill(cent,p->GetPuppiWeight3());
      fh2Weight4CentAll->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());
@@ -124,7 +125,7 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
      if(drMin<0.4) { //jetty region
        fh2AlphaCentJet->Fill(cent,p->GetPuppiAlpha());
        fh2Metric2CentJet->Fill(cent,p->GetPuppiMetric2());
-       fh2WeightCentJet->Fill(cent,p->GetPuppiWeight());
+       if((p->Pt()*p->GetPuppiWeight()) > fMinPt) fh2WeightCentJet->Fill(cent,p->GetPuppiWeight());
        fh2Weight2CentJet->Fill(cent,p->GetPuppiWeight2());
        fh2Weight3CentJet->Fill(cent,p->GetPuppiWeight3());
        fh2Weight4CentJet->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());
@@ -135,7 +136,7 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
      if(isInUE) {
        fh2AlphaCentUE->Fill(cent,p->GetPuppiAlpha());
        fh2Metric2CentUE->Fill(cent,p->GetPuppiMetric2());
-       fh2WeightCentUE->Fill(cent,p->GetPuppiWeight());
+       if((p->Pt()*p->GetPuppiWeight()) > fMinPt) fh2WeightCentUE->Fill(cent,p->GetPuppiWeight());
        fh2Weight2CentUE->Fill(cent,p->GetPuppiWeight2());
        fh2Weight3CentUE->Fill(cent,p->GetPuppiWeight3());
        fh2Weight4CentUE->Fill(cent,p->GetPuppiWeight3()*p->GetPuppiWeight());

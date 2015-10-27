@@ -15,7 +15,7 @@ ClassImp(LWJetProducer)
 
 //__________________________________________________________
 LWJetProducer::LWJetProducer() :
-inputBase("LWJetProducer"),
+anaBaseTask("LWJetProducer","LWJetProducer"),
   fJetType(kAKT),
   fRadius(0.3),
   fRecombScheme(fastjet::E_scheme),
@@ -41,8 +41,8 @@ inputBase("LWJetProducer"),
 }
 
 //__________________________________________________________
-LWJetProducer::LWJetProducer(const char *name) :
-  inputBase(name),
+LWJetProducer::LWJetProducer(const char *name, const char *title) :
+  anaBaseTask(name,title),
   fJetType(kAKT),
   fRadius(0.3),
   fRecombScheme(fastjet::E_scheme),
@@ -65,6 +65,16 @@ LWJetProducer::LWJetProducer(const char *name) :
   flwCSJetContName("")
 {
   //standard constructor
+}
+
+//----------------------------------------------------------
+void LWJetProducer::Exec(Option_t * /*option*/)
+{
+  //Initialize and find jets
+  if(!fIsInit) {
+    if(!Init()) return;
+  }
+  FindJets();
 }
 
 //__________________________________________________________
@@ -133,10 +143,6 @@ Bool_t LWJetProducer::Init() {
 //__________________________________________________________
 Int_t LWJetProducer::FindJets() {
 
-   if(!fIsInit) {
-    if(!Init()) return -1;
-  }
- 
   //clear
   fFastJetWrapper.Clear();
   fjInputs.clear();
@@ -226,7 +232,7 @@ Int_t LWJetProducer::FindJets() {
           jets_sub.push_back(subtracted_jet);
         }
       }
-      if(subtractor) delete subtractor; 
+      if(subtractor) { delete subtractor; subtractor = 0;} 
     }
   
     //loop over CS jets and store in jet container
