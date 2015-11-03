@@ -84,7 +84,7 @@ def fillFromStore(dir,ffile=0,step=-1,generatePfn=True):
                         #sline=commands.getstatusoutput('cmsPfn ' + line )[1]
                     else            : sline=line
                 elif(prefix=='singlefile') :
-                    sline='file://' + line
+                    sline=line #'file://' + line
                 else :
                     sline=str(prefix+'://' + dir + '/' + line.split()[0])
                     if(len(sline)==0): continue
