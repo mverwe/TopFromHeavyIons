@@ -39,6 +39,7 @@ class hiEventProducer : public inputBase {
   Float_t                      fVy;      //!
   Float_t                      fVz;      //!
   Int_t                        fHiBin;   //!
+  Float_t                      fHiHF;    //!
 
   TBranch        *b_run;    //!
   TBranch        *b_evt;    //!
@@ -47,6 +48,7 @@ class hiEventProducer : public inputBase {
   TBranch        *b_vy;     //!
   TBranch        *b_vz;     //!
   TBranch        *b_hiBin;  //!
+  TBranch        *b_hiHF;   //!
   
  private:
   hiEventProducer(const hiEventProducer& obj); // copy constructor

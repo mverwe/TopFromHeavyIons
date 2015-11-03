@@ -21,6 +21,7 @@ class hiEventContainer : public TNamed {
   void     SetVy(Float_t vy)                   { fVy    = vy ; }
   void     SetVz(Float_t vz)                   { fVz    = vz ; }
   void     SetHiBin(Int_t b)                   { fHiBin = b  ; fCent = (Double_t)fHiBin/2.;}
+  void     SetHiHF(Int_t b)                    { fHiHF = b   ; }
 
   Int_t    GetRun()        const               { return fRun;  }
   Int_t    GetEvent()      const               { return fEvt;  }
@@ -29,6 +30,7 @@ class hiEventContainer : public TNamed {
   Float_t  GetVy()         const               { return fVy;   }
   Float_t  GetVz()         const               { return fVz;   }
   Int_t    GetHiBin()      const               { return fHiBin;}
+  Float_t  GetHiHF()       const               { return fHiHF; }
   Double_t GetCentrality() const               { return fCent; }
     
  
@@ -40,12 +42,13 @@ class hiEventContainer : public TNamed {
   Float_t                      fVy;      //!
   Float_t                      fVz;      //!
   Int_t                        fHiBin;   //!
+  Float_t                      fHiHF;    //!
   Double_t                     fCent;
 
  private:
   hiEventContainer(const hiEventContainer& obj); // copy constructor
   hiEventContainer& operator=(const hiEventContainer& other); // assignment
   
-  ClassDef(hiEventContainer,1)
+  ClassDef(hiEventContainer,2)
 };
 #endif
