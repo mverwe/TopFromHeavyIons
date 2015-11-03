@@ -63,8 +63,8 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
   // chain->AddFriend(muTree);
   // Printf("muTree done");
 
-  TChain *jetTree = new TChain("akPu3PFJetAnalyzer/t");
-  //TChain *jetTree = new TChain("akPu2PFJetAnalyzer10/t");
+  //TChain *jetTree = new TChain("akPu3PFJetAnalyzer/t");
+  TChain *jetTree = new TChain("akPu2PFJetAnalyzer10/t");
   for(size_t i=firstFile; i<lastFile; i++) jetTree->Add(urls[i].c_str());
   chain->AddFriend(jetTree);
   Printf("jetTree done");
@@ -99,7 +99,7 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
   p_PUJet->SetInput(chain);
   p_PUJet->SetJetContName("aktPUR030");
   p_PUJet->SetEventObjects(fEventObjects);
-
+  p_PUJet->SetRadius(0.3);
   
   //---------------------------------------------------------------
   //analysis modules
@@ -202,17 +202,17 @@ void analyzePuppi(std::vector<std::string> urls, const char *outname = "eventObj
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
     //Run producers
-    // Printf("produce hiEvent");
+    Printf("produce hiEvent");
     p_evt->Run(jentry);   //hi event properties
-    // Printf("produce pf particles");
+    Printf("produce pf particles");
     p_pf->Run(jentry);    //pf particles
-    //  Printf("produce gen particles");
+    Printf("produce gen particles");
     p_gen->Run(jentry);   //generated particles
-    //  Printf("produce PU jets");
+    Printf("produce PU jets");
     p_PUJet->Run(jentry); //forest jets
 	    
     //Execute all analysis tasks
-    handler->ExecuteTask();
+    // handler->ExecuteTask();
   }
     
   fEventObjects->Print();
