@@ -38,7 +38,7 @@ class particleBase : public TObject {
   
  protected:
     TLorentzVector fLorentzVector;
-    Int_t          fId;
+    Int_t          fId;  //0: X; 1: h+-; 2: e; 3: mu; 4: gamma; 5: h0; 6: hHF; 7: egammaHF 
     Int_t          fCharge;
     Int_t          fMatchId1;
     Int_t          fMatchId2;

@@ -5,6 +5,7 @@
 #include "UserCode/TopFromHeavyIons/interface/ForestMuons.h"
 #include "UserCode/TopFromHeavyIons/interface/ForestPFs.h"
 #include "UserCode/TopFromHeavyIons/interface/ForestJets.h"
+#include "UserCode/TopFromHeavyIons/interface/ForestTracks.h"
 #include "UserCode/TopFromHeavyIons/interface/genParticle.h"
 #include "UserCode/TopFromHeavyIons/interface/genParticleProducer.h"
 #include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
@@ -19,6 +20,7 @@
 #include "UserCode/TopFromHeavyIons/interface/pfParticle.h"
 #include "UserCode/TopFromHeavyIons/interface/pfParticleProducer.h"
 #include "UserCode/TopFromHeavyIons/interface/rhoMap.h"
+#include "UserCode/TopFromHeavyIons/interface/trackProducer.h"
 
 #include "UserCode/TopFromHeavyIons/interface/FJ_includes.h"
 #include "UserCode/TopFromHeavyIons/interface/FJJetShape.h"
@@ -31,6 +33,7 @@
 #include "UserCode/TopFromHeavyIons/interface/anaMET.h"
 #include "UserCode/TopFromHeavyIons/interface/anaMuonIsolation.h"
 #include "UserCode/TopFromHeavyIons/interface/anaMuonMatcher.h"
+#include "UserCode/TopFromHeavyIons/interface/anaPFCandidates.h"
 #include "UserCode/TopFromHeavyIons/interface/anaPuppiParticles.h"
 #include "UserCode/TopFromHeavyIons/interface/anaPuppiProducer.h"
 #include "UserCode/TopFromHeavyIons/interface/anaRhoProducer.h"
@@ -50,6 +53,7 @@
 #pragma link C++ class ForestMuons;
 #pragma link C++ class ForestPFs;
 #pragma link C++ class ForestJets;
+#pragma link C++ class ForestTracks;
 #pragma link C++ class genParticle;
 #pragma link C++ class genParticleProducer;
 #pragma link C++ class hiEventContainer;
@@ -64,6 +68,7 @@
 #pragma link C++ class pfParticle;
 #pragma link C++ class pfParticleProducer;
 #pragma link C++ class rhoMap;
+#pragma link C++ class trackProducer;
 
 #pragma link C++ class FJJetShape;
 #pragma link C++ class FJWrapper;
@@ -75,6 +80,7 @@
 #pragma link C++ class anaMET;
 #pragma link C++ class anaMuonIsolation;
 #pragma link C++ class anaMuonMatcher;
+#pragma link C++ class anaPFCandidates;
 #pragma link C++ class anaPuppiParticles;
 #pragma link C++ class anaPuppiProducer;
 #pragma link C++ class anaRhoProducer;
