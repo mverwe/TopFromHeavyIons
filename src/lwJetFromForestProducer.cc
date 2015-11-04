@@ -12,6 +12,8 @@ lwJetFromForestProducer::lwJetFromForestProducer() :
 inputBase("lwJetFromForestProducer"),
   flwJetContName("flwJetCont"),
   flwJetContainer(0x0),
+  flwGenJetContName("flwGenJetCont"),
+  flwGenJetContainer(0x0),
   fForestJets(),
   fRadius(-1.)
 {
@@ -23,6 +25,8 @@ lwJetFromForestProducer::lwJetFromForestProducer(const char *name) :
   inputBase(name),
   flwJetContName("flwJetCont"),
   flwJetContainer(0x0),
+  flwGenJetContName("flwGenJetCont"),
+  flwGenJetContainer(0x0),
   fForestJets(),
   fRadius(-1.)
 {
@@ -89,11 +93,17 @@ Bool_t lwJetFromForestProducer::InitEventObjects() {
     Printf("%s: fEventObjects does not exist. Cannot store output",GetName());
     return kFALSE;
   } else {
-    if(!fEventObjects->FindObject(flwJetContName)) {
+    if(!fEventObjects->FindObject(flwJetContName) && !flwJetContName.IsNull()) {
       flwJetContainer = new lwJetContainer(flwJetContName);
       flwJetContainer->Init();
       flwJetContainer->SetJetRadius(fRadius);
       fEventObjects->Add(flwJetContainer);
+    }
+    if(!fEventObjects->FindObject(flwGenJetContName) && !flwGenJetContName.IsNull()) {
+      flwGenJetContainer = new lwJetContainer(flwGenJetContName);
+      flwGenJetContainer->Init();
+      flwGenJetContainer->SetJetRadius(fRadius);
+      fEventObjects->Add(flwGenJetContainer);
     }
   }
 
@@ -112,7 +122,7 @@ Bool_t lwJetFromForestProducer::Run(Long64_t entry) {
   //clear array
   flwJetContainer->ClearVec();
   
-  //put particles of this event in array
+  //put jets of this event in array
   Int_t jetCount = 0;
   for(Int_t i = 0; i<fForestJets.nref; i++) {
     lwJet *jet = new lwJet(fForestJets.jtpt[i],
@@ -126,6 +136,24 @@ Bool_t lwJetFromForestProducer::Run(Long64_t entry) {
     ++jetCount;
   }
   flwJetContainer->SortJets();
+
+  //only produce gen jets if requested and if they exist
+  if(flwGenJetContainer && fChain->GetBranch("ngen")) {
+    if(fForestJets.ngen>0) {
+      flwGenJetContainer->ClearVec();
+      Int_t genJetCount = 0;
+      for(Int_t i = 0; i<fForestJets.ngen; i++) {
+        lwJet *genjet = new lwJet(fForestJets.genpt[i],
+                                  fForestJets.geneta[i],
+                                  fForestJets.genphi[i],
+                                  0.);
+        flwGenJetContainer->AddJet(genjet,genJetCount);
+        ++genJetCount;
+      }
+      flwGenJetContainer->SortJets();
+    }
+  }
+  
   return kTRUE;
 }
 
