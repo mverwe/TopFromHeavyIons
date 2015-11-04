@@ -165,6 +165,7 @@ Bool_t trackProducer::Run(Long64_t entry) {
   Int_t trkCount = 0;
   for(Int_t i = 0; i<fForestTracks.nTrk; i++) {
     if(fSelectHighPurity && !fForestTracks.highPurity[i]) continue;
+    if(fForestTracks.trkPt[i]<1e-3) continue;
     Double_t mass = 0.13957;
     Int_t charge = fForestTracks.trkCharge[i];
 
@@ -173,8 +174,8 @@ Bool_t trackProducer::Run(Long64_t entry) {
                    fForestTracks.trkEta[i],
                    fForestTracks.trkPhi[i],
                    mass,
-                   1);
-    pPart->SetCharge(charge);
+                   1,
+                   charge);
     ++trkCount;
   }
   fTracks->Sort();
