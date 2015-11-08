@@ -34,6 +34,7 @@
 #include "UserCode/TopFromHeavyIons/interface/anaMuonIsolation.h"
 #include "UserCode/TopFromHeavyIons/interface/anaMuonMatcher.h"
 #include "UserCode/TopFromHeavyIons/interface/anaPFCandidates.h"
+#include "UserCode/TopFromHeavyIons/interface/anaPFvsCaloJet.h"
 #include "UserCode/TopFromHeavyIons/interface/anaPuppiParticles.h"
 #include "UserCode/TopFromHeavyIons/interface/anaPuppiProducer.h"
 #include "UserCode/TopFromHeavyIons/interface/anaRhoProducer.h"
@@ -81,6 +82,7 @@
 #pragma link C++ class anaMuonIsolation;
 #pragma link C++ class anaMuonMatcher;
 #pragma link C++ class anaPFCandidates;
+#pragma link C++ class anaPFvsCaloJet;
 #pragma link C++ class anaPuppiParticles;
 #pragma link C++ class anaPuppiProducer;
 #pragma link C++ class anaRhoProducer;

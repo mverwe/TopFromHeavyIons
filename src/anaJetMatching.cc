@@ -62,13 +62,15 @@ void anaJetMatching::MatchJetsGeo() {
 
   //Determine centrality bin
   Double_t cent = fHiEvent->GetCentrality();
-  Int_t fCentBin = -1;
+  Int_t fCentBin = 0;
+  if(fNcentBins==4) {
   if(cent>=0. && cent<10.)       fCentBin = 0;
   else if(cent>=10. && cent<30.) fCentBin = 1;
   else if(cent>=30. && cent<50.) fCentBin = 2;
   else if(cent>=50. && cent<80.) fCentBin = 3;
   else fCentBin = -1;
-   
+  } 
+
   const Int_t nJets1 = fJetsContBase->GetNJets();
   const Int_t nJets2 = fJetsContTag->GetNJets();
   if(nJets1==0 || nJets2==0) return;

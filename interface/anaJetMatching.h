@@ -20,6 +20,7 @@ public:
    void SetHiEvtName(TString name)    { fEvtName  = name ; }
    void SetJetsNameBase(TString name) { fJetsNameBase = name ; }
    void SetJetsNameTag(TString name)  { fJetsNameTag  = name ; }
+   void SetNCentBins(Int_t n)         { fNcentBins = n ; }
 
    void MatchJetsGeo();
    

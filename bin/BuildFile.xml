@@ -12,5 +12,6 @@
   <bin name="runExample"             file="runExample.cc"></bin>
   <bin name="runPuppiAna"            file="runPuppiAna.cc"></bin>
   <bin name="runPFCandAna"           file="runPFCandAna.cc"></bin>
+  <bin name="runPFvsCaloJetAna"      file="runPFvsCaloJetAna.cc"></bin>
 </environment>
 <Flags CXXFLAGS="-g"/>
