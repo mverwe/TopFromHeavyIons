@@ -136,14 +136,14 @@ void analyzePFCandidates(std::vector<std::string> urls, const char *outname = "e
   anaTrkCaloJet->SetHiEvtName("hiEventContainer");
   anaTrkCaloJet->SetParticlesName("tracks");
   anaTrkCaloJet->SetJetsName("aktPu4Calo");
-  handler->Add(anaTrkCaloJet);
+  if(doTracks) handler->Add(anaTrkCaloJet);
 
   anaPFCandidates *anaTrk = new anaPFCandidates("tracksWithGenJet","tracksWithGenJet");
   anaTrk->ConnectEventObject(fEventObjects);
   anaTrk->SetHiEvtName("hiEventContainer");
   anaTrk->SetParticlesName("tracks");
   anaTrk->SetJetsName("akt4Gen");
-  handler->Add(anaTrk);
+  if(doTracks) handler->Add(anaTrk);
   
   //---------------------------------------------------------------
   //Event loop

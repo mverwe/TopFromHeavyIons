@@ -69,12 +69,13 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
    fh1HiHF->Fill(fHiEvent->GetHiHF());
    
    for (int i = 0; i < fParticles->GetEntriesFast(); i++) {
-     pfParticle *p = static_cast<pfParticle*>(fParticles->At(i));
+     particleBase *p = static_cast<particleBase*>(fParticles->At(i));
      if(!p) {
        Printf("%s ERROR: couldn't get particle",GetName());
        continue;
      }
-
+     if(p->Pt()<1e-3) continue;
+     
      //only QA particle at midrapidity for now. TODO
      if(abs(p->Eta())>1.3) continue;
 
@@ -94,6 +95,7 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
      for(Int_t ij = 0; ij<fJetsCont->GetNJets(); ij++) {
        lwJet *jet = fJetsCont->GetJet(ij);
        if(!jet) continue;
+       if(abs(jet->Eta())>1.3) continue;
        if(jet->Pt() > fMinJetPt && jet->Pt() < fMaxJetPt) {
          fh2CentPtJet->Fill(fHiEvent->GetCentrality(),jet->Pt());
          fh2HiHFPtJet->Fill(fHiEvent->GetHiHF(),jet->Pt());
@@ -103,6 +105,7 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
            //pfParticle *pf = static_cast<pfParticle*>(fParticles->At(i));
            particleBase *pb = static_cast<particleBase*>(fParticles->At(i));
            if(!pb) continue;
+           if(pb->Pt()<1e-3) continue;
            Double_t dr = jet->DeltaR(pb);
            if(dr>r) continue; //only accept particles in cone
            

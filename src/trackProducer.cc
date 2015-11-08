@@ -176,6 +176,7 @@ Bool_t trackProducer::Run(Long64_t entry) {
                    mass,
                    1,
                    charge);
+    pPart->SetCharge(charge); //avoid unused variable error
     ++trkCount;
   }
   fTracks->Sort();
