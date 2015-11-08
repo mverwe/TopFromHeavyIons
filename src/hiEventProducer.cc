@@ -21,7 +21,8 @@ inputBase("hiEventProducer"),
   fVy(0.),
   fVz(0.),
   fHiBin(0),
-  fHiHF(0)
+  fHiHF(0),
+  fNPV(0)
 {
   //default constructor
 }
@@ -38,7 +39,8 @@ hiEventProducer::hiEventProducer(const char *name) :
   fVy(0.),
   fVz(0.),
   fHiBin(0),
-  fHiHF(0)
+  fHiHF(0),
+  fNPV(0)
 {
   //standard constructor
 }
@@ -65,7 +67,9 @@ Bool_t hiEventProducer::Init() {
     fChain->SetBranchAddress("vz",    &fVz,    &b_vz);
     fChain->SetBranchAddress("hiBin", &fHiBin, &b_hiBin);
     fChain->SetBranchAddress("hiHF",  &fHiHF,  &b_hiHF);
-  
+    if(fChain->GetBranch("nPU"))
+	    fChain->SetBranchAddress("nPU",&fNPV,&b_nPU);
+
     fInit = kTRUE;
   }
   return kTRUE;
@@ -103,7 +107,8 @@ Bool_t hiEventProducer::Run(Long64_t entry) {
   fhiEventContainer->SetVz(fVz);
   fhiEventContainer->SetHiBin(fHiBin);
   fhiEventContainer->SetHiHF(fHiHF);
-  
+  fhiEventContainer->SetNPV(fNPV);
+
   return kTRUE; 
 }
 

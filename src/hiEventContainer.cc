@@ -16,7 +16,8 @@ TNamed("hiEventContainer","hiEventContainer"),
   fVy(0.),
   fVz(0.),
   fHiBin(0),
-  fCent(0.)
+  fCent(0.),
+  fNPV(0)
 {
   //default constructor
 }
@@ -31,7 +32,8 @@ hiEventContainer::hiEventContainer(const char *name) :
   fVy(0.),
   fVz(0.),
   fHiBin(0),
-  fCent(0.)
+  fCent(0.),
+  fNPV(0)
 {
   //standard constructor
 }

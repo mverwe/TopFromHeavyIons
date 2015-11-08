@@ -40,6 +40,7 @@ class hiEventProducer : public inputBase {
   Float_t                      fVz;      //!
   Int_t                        fHiBin;   //!
   Float_t                      fHiHF;    //!
+  Int_t                        fNPV;     //!
 
   TBranch        *b_run;    //!
   TBranch        *b_evt;    //!
@@ -49,11 +50,12 @@ class hiEventProducer : public inputBase {
   TBranch        *b_vz;     //!
   TBranch        *b_hiBin;  //!
   TBranch        *b_hiHF;   //!
-  
+  TBranch        *b_nPU;    //!
+
  private:
   hiEventProducer(const hiEventProducer& obj); // copy constructor
   hiEventProducer& operator=(const hiEventProducer& other); // assignment
   
-  ClassDef(hiEventProducer,1)
+  ClassDef(hiEventProducer,2)
 };
 #endif
