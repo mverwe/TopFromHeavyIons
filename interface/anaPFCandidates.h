@@ -27,7 +27,7 @@ public:
   void SetHiEvtName(TString name)     { fEvtName  = name ; }
   void SetParticlesName(TString name) { fParticlesName = name ; }
   void SetJetsName(TString name)      { fJetsName = name ; }
-  void SetJEtPtRange(Double_t min, Double_t max) {fMinJetPt = min; fMaxJetPt = max; }
+  void SetJetPtRange(Double_t min, Double_t max) {fMinJetPt = min; fMaxJetPt = max; }
   
  protected:
   TString           fEvtName;              //name of hi event container
@@ -40,13 +40,23 @@ public:
   Double_t          fMaxJetPt;             //maximum jet pt
 
   TH1F             *fh1HiHF;               //!HFE distribution
-  TH2F            **fh2CentPt;             //!pt vs centrality
+  TH1F             *fh1Cent;               //!centrality distribution
+  
+  TH2F            **fh2CentPt;             //!pt vs centrality full event
   TH2F            **fh2CentPtInJet;        //!pt vs centrality in jet
-  TH2F            **fh2HiHFPt;             //!pt vs HF energy
+  TH2F            **fh2HiHFPt;             //!pt vs HF energy full event
   TH2F            **fh2HiHFPtInJet;        //!pt vs HF energy in jet
   TH2F             *fh2CentPtJet;          //!centrality vs pt jet
   TH2F             *fh2HiHFPtJet;          //!HF energy vs pt jet
+
+  //add eta axis
+  TH3F            **fh3CentPtEta;             //!pt vs eta vs centrality full event
+  TH3F            **fh3CentPtEtaInJet;        //!pt vs eta vs centrality in jet
+  TH3F            **fh3HiHFPtEta;             //!pt vs eta vs HF energy full event
+  TH3F            **fh3HiHFPtEtaInJet;        //!pt vs eta vs HF energy in jet
+  TH3F             *fh3CentPtEtaJet;          //!centrality vs pt vs eta jet
+  TH3F             *fh3HiHFPtEtaJet;          //!HF energy vs pt vs eta jet
   
-  ClassDef(anaPFCandidates,1)
+  ClassDef(anaPFCandidates,2)
 };
 #endif

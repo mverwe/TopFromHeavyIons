@@ -13,5 +13,7 @@
   <bin name="runPuppiAna"            file="runPuppiAna.cc"></bin>
   <bin name="runPFCandAna"           file="runPFCandAna.cc"></bin>
   <bin name="runPFvsCaloJetAna"      file="runPFvsCaloJetAna.cc"></bin>
+  <bin name="runPFvsCaloJetAnappData" file="runPFvsCaloJetAnappData.cc"></bin>
+  <bin name="runGenvsCaloJetAna"      file="runGenvsCaloJetAna.cc"></bin>
 </environment>
 <Flags CXXFLAGS="-g"/>

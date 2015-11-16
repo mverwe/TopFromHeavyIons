@@ -33,22 +33,23 @@ anaJetMatching::anaJetMatching(const char *name, const char *title)
 //----------------------------------------------------------
 void anaJetMatching::Exec(Option_t * /*option*/)
 {
-   //printf("anaJetMatching executing\n");
+  // printf("anaJetMatching executing\n");
   if(!fInitOutput) CreateOutputObjects();
 
   //Get event properties
-  if(!fHiEvent && !fEvtName.IsNull())
+  if(!fHiEvent && !fEvtName.IsNull()) {
     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
   if(!fHiEvent) return;
-  
+  }
    if(!fJetsContBase && !fJetsNameBase.IsNull())
      fJetsContBase = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameBase.Data()));
-   if(!fJetsContBase) return;
+   if(!fJetsContBase) { Printf("No fJetsContBase"); return; }
 
    if(!fJetsContTag && !fJetsNameTag.IsNull())
      fJetsContTag = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameTag.Data()));
-   if(!fJetsContTag) return;
+   if(!fJetsContTag) { Printf("No fJetsContTag"); return; }
 
+  // Printf("start matching");
    MatchJetsGeo();
 
 }
@@ -61,7 +62,8 @@ void anaJetMatching::MatchJetsGeo() {
   if(!fJetsContBase || !fJetsContTag) return;
 
   //Determine centrality bin
-  Double_t cent = fHiEvent->GetCentrality();
+  Double_t cent = 0.;
+  if(fHiEvent) cent = fHiEvent->GetCentrality();
   Int_t fCentBin = 0;
   if(fNcentBins==4) {
   if(cent>=0. && cent<10.)       fCentBin = 0;
@@ -73,7 +75,10 @@ void anaJetMatching::MatchJetsGeo() {
 
   const Int_t nJets1 = fJetsContBase->GetNJets();
   const Int_t nJets2 = fJetsContTag->GetNJets();
-  if(nJets1==0 || nJets2==0) return;
+  if(nJets1==0 || nJets2==0) {
+     Printf("nJets1: %d  nJets2: %d",nJets1,nJets2);	  
+	  return;
+  }
 
   TArrayI faMatchIndex1;
   faMatchIndex1.Set(nJets2+1);

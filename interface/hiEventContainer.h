@@ -17,6 +17,7 @@ class hiEventContainer : public TNamed {
   void     SetRun(Int_t r)                     { fRun   = r  ; }
   void     SetEvent(Int_t e)                   { fEvt   = e  ; }
   void     SetLumi(Int_t l)                    { fLumi  = l  ; }
+  void     SetWeight(Float_t w)                { fWeight= w  ; }
   void     SetVx(Float_t vx)                   { fVx    = vx ; }
   void     SetVy(Float_t vy)                   { fVy    = vy ; }
   void     SetVz(Float_t vz)                   { fVz    = vz ; }
@@ -27,6 +28,7 @@ class hiEventContainer : public TNamed {
   Int_t    GetRun()        const               { return fRun;  }
   Int_t    GetEvent()      const               { return fEvt;  }
   Int_t    GetLumi()       const               { return fLumi; }
+  Float_t  GetWeight()     const               { return fWeight;}
   Float_t  GetVx()         const               { return fVx;   }
   Float_t  GetVy()         const               { return fVy;   }
   Float_t  GetVz()         const               { return fVz;   }
@@ -39,6 +41,7 @@ class hiEventContainer : public TNamed {
   Int_t                        fRun;     //
   Int_t                        fEvt;     //
   Int_t                        fLumi;    //
+  Float_t                      fWeight;  //
   Float_t                      fVx;      //
   Float_t                      fVy;      //
   Float_t                      fVz;      //

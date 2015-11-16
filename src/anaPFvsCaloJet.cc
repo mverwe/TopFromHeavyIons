@@ -30,12 +30,12 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
   if(!fInitOutput) CreateOutputObjects();
 
   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
+   if(!fHiEvent && !fEvtName.IsNull()) {
      fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
    if(!fHiEvent) return;
-
+  
    if(abs(fHiEvent->GetVz())>15.) return;
-   
+   }
    //Get PF jets
    if(!fJetsCont && !fJetsName.IsNull())
      fJetsCont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsName.Data()));
@@ -46,9 +46,14 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
      fJets2Cont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJets2Name.Data()));
    if(!fJets2Cont) return;
 
-   int npv = fHiEvent->GetNPV();
+   int npv = 1;
+   if(fHiEvent) npv = fHiEvent->GetNPV();
    fhNPV->Fill(npv);
-   
+
+   float weight = 1.;
+   if(fHiEvent) {
+   if(fHiEvent->GetWeight()>0.) weight = fHiEvent->GetWeight();
+   }
    for(Int_t ij = 0; ij<fJetsCont->GetNJets(); ij++) {
      lwJet *jet1 = fJetsCont->GetJet(ij);
      if(!jet1) continue;
@@ -61,12 +66,12 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
      if(!jet2) continue;
      
      double dpt = jet2->Pt()-jet1->Pt();
-     fh3PtTrueNPVDeltaPt->Fill(jet1->Pt(),npv,dpt);
+     fh3PtTrueNPVDeltaPt->Fill(jet1->Pt(),npv,dpt,weight);
      if(jet1->Pt()>0.) {
-       fh3PtTrueNPVDeltaPtRel->Fill(jet1->Pt(),npv,dpt/jet1->Pt());
-       fh3PtTrueNPVScalePt->Fill(jet1->Pt(),npv,jet2->Pt()/jet1->Pt());
+       fh3PtTrueNPVDeltaPtRel->Fill(jet1->Pt(),npv,dpt/jet1->Pt(),weight);
+       fh3PtTrueNPVScalePt->Fill(jet1->Pt(),npv,jet2->Pt()/jet1->Pt(),weight);
      }
-     fh3PtTruePtSubNPV->Fill(jet1->Pt(),jet2->Pt(),npv);
+     fh3PtTruePtSubNPV->Fill(jet1->Pt(),jet2->Pt(),npv,weight);
      
    }
 

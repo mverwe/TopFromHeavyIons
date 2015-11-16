@@ -28,7 +28,7 @@
 
 using namespace std;
 
-void analyzePFvsCaloJets(std::vector<std::string> urls, const char *outname = "eventObjects.root", Long64_t nentries = 20, Int_t firstF = -1, Int_t lastF = -1) {
+void analyzePFvsCaloJets(std::vector<std::string> urls, const char *outname = "eventObjects.root", Long64_t nentries = 20, Int_t firstF = -1, Int_t lastF = -1, Int_t firstEvent = 0) {
 
   // std::vector<std::string> urls = CollectFiles(list);
 
@@ -46,6 +46,12 @@ void analyzePFvsCaloJets(std::vector<std::string> urls, const char *outname = "e
     lastFile = (size_t)lastF;
   }
   std::cout << "firstFile: " << firstFile << "  lastFile: " << lastFile << std::endl;
+
+  Int_t lastEvent = nentries;
+  if(firstEvent>0) {
+    lastEvent = firstEvent + nentries;
+  }
+  std::cout << "firstEvent: " << firstEvent << std::endl;
   
   //add files to chain
   TChain *chain = NULL;
@@ -162,7 +168,36 @@ void analyzePFvsCaloJets(std::vector<std::string> urls, const char *outname = "e
   anaPFCHSCaloJet->SetCaloJetsName("akt4Calo");
   handler->Add(anaPFCHSCaloJet);
 
- 
+  //PF-GEN matching
+  anaJetMatching *matchingGenPFJet = new anaJetMatching("matchingGenPFJet","matchingGenPFJet");
+  matchingGenPFJet->ConnectEventObject(fEventObjects);
+  matchingGenPFJet->SetHiEvtName("hiEventContainer");
+  matchingGenPFJet->SetJetsNameBase("akt4Gen");
+  matchingGenPFJet->SetJetsNameTag("akt4PF");
+  matchingGenPFJet->SetNCentBins(1);
+  handler->Add(matchingGenPFJet);  
+  
+  anaPFvsCaloJet *anaGenPFJet = new anaPFvsCaloJet("anaGenVsPFJet","anaGenVsPFJet");
+  anaGenPFJet->ConnectEventObject(fEventObjects);
+  anaGenPFJet->SetHiEvtName("hiEventContainer");
+  anaGenPFJet->SetPFJetsName("akt4Gen");
+  anaGenPFJet->SetCaloJetsName("akt4PF");
+  handler->Add(anaGenPFJet);
+
+  anaJetMatching *matchingGenPFCHSJet = new anaJetMatching("matchingGenPFCHSJet","matchingGenPFCHSJet");
+  matchingGenPFCHSJet->ConnectEventObject(fEventObjects);
+  matchingGenPFCHSJet->SetHiEvtName("hiEventContainer");
+  matchingGenPFCHSJet->SetJetsNameBase("akt4PFCHS");
+  matchingGenPFCHSJet->SetJetsNameTag("akt4Calo");
+  matchingPFCaloJet->SetNCentBins(1);
+  handler->Add(matchingGenPFCHSJet);
+
+  anaPFvsCaloJet *anaGenPFCHSJet = new anaPFvsCaloJet("anaGenVsPFCHSJet","anaGenVsPFCHSJet");
+  anaGenPFCHSJet->ConnectEventObject(fEventObjects);
+  anaGenPFCHSJet->SetHiEvtName("hiEventContainer");
+  anaGenPFCHSJet->SetPFJetsName("akt4Gen");
+  anaGenPFCHSJet->SetCaloJetsName("akt4PFCHS");
+  handler->Add(anaGenPFCHSJet);
   
   //---------------------------------------------------------------
   //Event loop
@@ -171,8 +206,7 @@ void analyzePFvsCaloJets(std::vector<std::string> urls, const char *outname = "e
   if(nentries<0) nentries = chain->GetEntries();
   // Long64_t nentries = 20;//chain->GetEntriesFast();
   Printf("nentries: %lld  tot: %lld",nentries,entries_tot);
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
-
+  for (Long64_t jentry=firstEvent; jentry<lastEvent; ++jentry) {
     //Run producers
     // Printf("produce hiEvent");
     p_evt->Run(jentry);   //hi event properties

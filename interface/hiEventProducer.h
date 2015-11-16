@@ -35,6 +35,7 @@ class hiEventProducer : public inputBase {
   Int_t                        fRun;     //!
   Int_t                        fEvt;     //!
   Int_t                        fLumi;    //!
+  Float_t                      fWeight;  //!
   Float_t                      fVx;      //!
   Float_t                      fVy;      //!
   Float_t                      fVz;      //!
@@ -45,6 +46,7 @@ class hiEventProducer : public inputBase {
   TBranch        *b_run;    //!
   TBranch        *b_evt;    //!
   TBranch        *b_lumi;   //!
+  TBranch        *b_weight; //!
   TBranch        *b_vx;     //!
   TBranch        *b_vy;     //!
   TBranch        *b_vz;     //!

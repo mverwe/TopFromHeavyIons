@@ -38,6 +38,7 @@ Bool_t genParticleProducer::Init() {
 
   if(fInputMode==hiForest) {
     // Set branch addresses and branch pointers
+    Printf("Set branch addresses and branch pointers");
     if (fChain->GetBranch("event")) fChain->SetBranchAddress("event", &fFGenParts.event, &fFGenParts.b_event);
     if (fChain->GetBranch("b")) fChain->SetBranchAddress("b", &fFGenParts.b, &fFGenParts.b_b);
     if (fChain->GetBranch("npart")) fChain->SetBranchAddress("npart", &fFGenParts.npart, &fFGenParts.b_npart);
@@ -48,19 +49,32 @@ Bool_t genParticleProducer::Init() {
     if (fChain->GetBranch("n")) fChain->SetBranchAddress("n", fFGenParts.n, &fFGenParts.b_n);
     if (fChain->GetBranch("ptav")) fChain->SetBranchAddress("ptav", fFGenParts.ptav, &fFGenParts.b_ptav);
     if (fChain->GetBranch("mult")) fChain->SetBranchAddress("mult", &fFGenParts.mult, &fFGenParts.b_mult);
-    if (fChain->GetBranch("pt")) fChain->SetBranchAddress("pt", fFGenParts.pt, &fFGenParts.b_pt);
-    if (fChain->GetBranch("eta")) fChain->SetBranchAddress("eta", fFGenParts.eta, &fFGenParts.b_eta);
-    if (fChain->GetBranch("phi")) fChain->SetBranchAddress("phi", fFGenParts.phi, &fFGenParts.b_phi);
-    if (fChain->GetBranch("pdg")) fChain->SetBranchAddress("pdg", fFGenParts.pdg, &fFGenParts.b_pdg);
-    if (fChain->GetBranch("chg")) fChain->SetBranchAddress("chg", fFGenParts.chg, &fFGenParts.b_chg);
-    if (fChain->GetBranch("sta")) fChain->SetBranchAddress("sta", fFGenParts.sta, &fFGenParts.b_sta);
-    if (fChain->GetBranch("sube")) fChain->SetBranchAddress("sube", fFGenParts.sube, &fFGenParts.b_sube);
+
+    //new version
+    if (fChain->GetBranch("pt")) fChain->SetBranchAddress("pt", &fFGenParts.pt, &fFGenParts.b_pt);
+    if (fChain->GetBranch("eta")) fChain->SetBranchAddress("eta", &fFGenParts.eta, &fFGenParts.b_eta);
+    if (fChain->GetBranch("phi")) fChain->SetBranchAddress("phi", &fFGenParts.phi, &fFGenParts.b_phi);
+    if (fChain->GetBranch("pdg")) fChain->SetBranchAddress("pdg", &fFGenParts.pdg, &fFGenParts.b_pdg);
+    if (fChain->GetBranch("chg")) fChain->SetBranchAddress("chg", &fFGenParts.chg, &fFGenParts.b_chg);
+    // if (fChain->GetBranch("sta")) fChain->SetBranchAddress("sta", &fFGenParts.sta, &fFGenParts.b_sta);
+    if (fChain->GetBranch("sube")) fChain->SetBranchAddress("sube", &fFGenParts.sube, &fFGenParts.b_sube);
+    
+    //old version
+    // if (fChain->GetBranch("pt")) fChain->SetBranchAddress("pt", fFGenParts.pt, &fFGenParts.b_pt);
+    // if (fChain->GetBranch("eta")) fChain->SetBranchAddress("eta", fFGenParts.eta, &fFGenParts.b_eta);
+    // if (fChain->GetBranch("phi")) fChain->SetBranchAddress("phi", fFGenParts.phi, &fFGenParts.b_phi);
+    // if (fChain->GetBranch("pdg")) fChain->SetBranchAddress("pdg", fFGenParts.pdg, &fFGenParts.b_pdg);
+    // if (fChain->GetBranch("chg")) fChain->SetBranchAddress("chg", fFGenParts.chg, &fFGenParts.b_chg);
+    // if (fChain->GetBranch("sta")) fChain->SetBranchAddress("sta", fFGenParts.sta, &fFGenParts.b_sta);
+    // if (fChain->GetBranch("sube")) fChain->SetBranchAddress("sube", fFGenParts.sube, &fFGenParts.b_sube);
+    
     if (fChain->GetBranch("vx")) fChain->SetBranchAddress("vx", &fFGenParts.vx, &fFGenParts.b_vx);
     if (fChain->GetBranch("vy")) fChain->SetBranchAddress("vy", &fFGenParts.vy, &fFGenParts.b_vy);
     if (fChain->GetBranch("vz")) fChain->SetBranchAddress("vz", &fFGenParts.vz, &fFGenParts.b_vz);
     if (fChain->GetBranch("vr")) fChain->SetBranchAddress("vr", &fFGenParts.vr, &fFGenParts.b_vr);
 
     fInit = kTRUE;
+    Printf("done setting branch addresses");
   }
   return kTRUE;
 }
@@ -89,7 +103,7 @@ Bool_t genParticleProducer::Run(Long64_t entry) {
   //overloaded run funtion
   Long64_t centry = LoadTree(entry);
   if(centry<0) return kFALSE;
-
+  Printf("tree loaded");
   if(!InitEventObjects()) return kFALSE;
   
   //clear arrays
@@ -98,14 +112,24 @@ Bool_t genParticleProducer::Run(Long64_t entry) {
   //generated particles
   int ngen = 0;
   for(Int_t i = 0; i<fFGenParts.mult; i++) {
+    Printf("igen: %d",i);
     if(!AcceptParticle(i)) continue;
-    genParticle *gp = new genParticle(fFGenParts.pt[i],
-                                      fFGenParts.eta[i],
-                                      fFGenParts.phi[i],
+    // genParticle *gp = new genParticle(fFGenParts.pt[i],
+    //                                   fFGenParts.eta[i],
+    //                                   fFGenParts.phi[i],
+    //                                   0,
+    //                                   i);
+    // gp->SetCharge(fFGenParts.pdg[i]/abs(fFGenParts.pdg[i]));
+    // gp->SetPID(fFGenParts.pdg[i]);
+
+    genParticle *gp = new genParticle((*fFGenParts.pt)[i],
+                                      (*fFGenParts.eta)[i],
+                                      (*fFGenParts.phi)[i],
                                       0,
                                       i);
-    gp->SetCharge(fFGenParts.pdg[i]/abs(fFGenParts.pdg[i]));
-    gp->SetPID(fFGenParts.pdg[i]);
+    gp->SetCharge((*fFGenParts.pdg)[i]/abs((*fFGenParts.pdg)[i]));
+    gp->SetPID((*fFGenParts.pdg)[i]);
+    
     gp->SetPIDMom(0);
     (*fGenParticles)[ngen] = gp;
     ++ngen;
@@ -120,8 +144,8 @@ Bool_t genParticleProducer::AcceptParticle(Int_t i) {
 
   //gen particle selection
 
-  if(fFGenParts.sta[i]!=fStatus)                  return kFALSE;
-  if(fFGenParts.sube[i]!=fSube)                   return kFALSE;
+  // if((*fFGenParts.sta)[i]!=fStatus)                  return kFALSE;
+  if((*fFGenParts.sube)[i]!=fSube)                   return kFALSE;
   
   else return kTRUE;
 }
@@ -141,13 +165,14 @@ Long64_t genParticleProducer::LoadTree(Long64_t entry) {
   }
 
   //  fChain->SetMakeClass(1);
- 
+  Printf("LoadTree");
   Long64_t centry = fChain->LoadTree(entry);
   if (centry < 0) {
     Printf("genParticleProducer: centry smaller than 0");
     return centry;  
   }
   
+  Printf("GetEntry");
   fChain->GetEntry(entry);
 
   return centry;

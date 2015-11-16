@@ -10,6 +10,13 @@
 
 using namespace std;
 
+// Command line variables
+// 0: this rin macro
+// 1: python config
+// 2: first file
+// 3: last file
+// 4: first event
+
 //
 // MAIN METHOD
 //
@@ -33,7 +40,11 @@ int main(int argc, char* argv[])
     firstFile = atoi(argv[2]);
     lastFile = atoi(argv[3]);
   }
-  
+
+  Int_t firstEvent = 0;
+  if(argc>3)
+    firstEvent = atoi(argv[4]);
+      
   std::cout << "Have " << argc << " arguments:" << std::endl;
   for (int i = 0; i < argc; ++i) {
     std::cout << argv[i] << std::endl;
@@ -46,11 +57,11 @@ int main(int argc, char* argv[])
   for (std::vector<std::string>::const_iterator i = urls.begin(); i != urls.end(); ++i)
     std::cout << *i << std::endl;
   
-  std::string outname = "AnaResultsPFvsCaloJets.root";
+  std::string outname = Form("AnaResultsPFvsCaloJets_%d.root",firstEvent);
   // std::string outname = runProcess.getParameter<std::string>("output");
   int maxEvts = runProcess.getParameter<int>("maxEvents");
    
-  analyzePFvsCaloJets(urls,outname.c_str(),maxEvts,firstFile,lastFile);
+  analyzePFvsCaloJets(urls,outname.c_str(),maxEvts,firstFile,lastFile,firstEvent);
   
   cout << "Results have been stored in " << outname << endl;
 }

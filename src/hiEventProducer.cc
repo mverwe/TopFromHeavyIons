@@ -17,6 +17,7 @@ inputBase("hiEventProducer"),
   fRun(-1),
   fEvt(-1),
   fLumi(-1),
+  fWeight(-1),
   fVx(0.),
   fVy(0.),
   fVz(0.),
@@ -35,6 +36,7 @@ hiEventProducer::hiEventProducer(const char *name) :
   fRun(-1),
   fEvt(-1),
   fLumi(-1),
+  fWeight(-1),
   fVx(0.),
   fVy(0.),
   fVz(0.),
@@ -62,13 +64,15 @@ Bool_t hiEventProducer::Init() {
     fChain->SetBranchAddress("run",   &fRun,   &b_run);
     fChain->SetBranchAddress("evt",   &fEvt,   &b_evt);
     fChain->SetBranchAddress("lumi",  &fLumi,  &b_lumi);
+    if(fChain->GetBranch("weight"))
+      fChain->SetBranchAddress("weight",&fWeight,&b_weight);
     fChain->SetBranchAddress("vx",    &fVx,    &b_vx);
     fChain->SetBranchAddress("vy",    &fVy,    &b_vy);
     fChain->SetBranchAddress("vz",    &fVz,    &b_vz);
     fChain->SetBranchAddress("hiBin", &fHiBin, &b_hiBin);
     fChain->SetBranchAddress("hiHF",  &fHiHF,  &b_hiHF);
     if(fChain->GetBranch("nPU"))
-	    fChain->SetBranchAddress("nPU",&fNPV,&b_nPU);
+      fChain->SetBranchAddress("nPU",&fNPV,&b_nPU);
 
     fInit = kTRUE;
   }
@@ -102,6 +106,7 @@ Bool_t hiEventProducer::Run(Long64_t entry) {
   fhiEventContainer->SetRun(fRun);
   fhiEventContainer->SetEvent(fEvt);
   fhiEventContainer->SetLumi(fLumi);
+  fhiEventContainer->SetWeight(fWeight);
   fhiEventContainer->SetVx(fVx);
   fhiEventContainer->SetVy(fVy);
   fhiEventContainer->SetVz(fVz);

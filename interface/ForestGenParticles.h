@@ -3,6 +3,7 @@
 
 #define maxGenParticles 20000
 
+
 class ForestGenParticles {
 public :
    ForestGenParticles(){};
@@ -19,6 +20,33 @@ public :
    Int_t           n[3];
    Float_t         ptav[3];
    Int_t           mult;
+
+   //new version
+   /* std::vector<float>   *pt; */
+   /* std::vector<float>   *eta; */
+   /* std::vector<float>   *phi; */
+   /* std::vector<int>     *pdg; */
+   /* std::vector<int>     *chg; */
+   /* std::vector<int>     *sube; */
+
+   std::vector<float>   *pt;
+   std::vector<float>   *eta;
+   std::vector<float>   *phi;
+   std::vector<int>     *pdg;
+   std::vector<int>     *chg;
+   std::vector<int>     *sube;
+   std::vector<int>     *sta;
+
+
+   
+   /* std::vector<int>     *matchingID; */
+   /* std::vector<int>     *nMothers; */
+   /* std::vector<std::vector<int> > *motherIdx; */
+   /* std::vector<int>     *nDaughters; */
+   /* std::vector<std::vector<int> > *daughterIdx; */
+   
+   //old version
+   /*
    Float_t         pt[maxGenParticles];   //[mult]
    Float_t         eta[maxGenParticles];   //[mult]
    Float_t         phi[maxGenParticles];   //[mult]
@@ -26,6 +54,7 @@ public :
    Int_t           chg[maxGenParticles];   //[mult]
    Int_t           sta[maxGenParticles];   //[mult]
    Int_t           sube[maxGenParticles];   //[mult]
+   */
    Float_t         vx;
    Float_t         vy;
    Float_t         vz;

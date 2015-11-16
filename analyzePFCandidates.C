@@ -27,7 +27,7 @@
 
 using namespace std;
 
-Bool_t doTracks        = kTRUE;
+Bool_t doTracks        = kFALSE;//kTRUE;
 
 void analyzePFCandidates(std::vector<std::string> urls, const char *outname = "eventObjects.root", Long64_t nentries = 20, Int_t firstF = -1, Int_t lastF = -1) {
 
