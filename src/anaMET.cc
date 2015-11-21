@@ -12,8 +12,6 @@ ClassImp(anaMET)
    
 anaMET::anaMET(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fParticlesName(""),
   fParticles(0x0),
   fMetType(kGen),
@@ -34,11 +32,8 @@ void anaMET::Exec(Option_t * /*option*/)
    //printf("anaMET executing\n");
    if(!fInitOutput) CreateOutputObjects();
 
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
-
+   //Get objects from event
+   //
    //Get particles from which MET will be calculated
    if(!fParticles && !fParticlesName.IsNull()) {
      //  fEventObjects->Print();

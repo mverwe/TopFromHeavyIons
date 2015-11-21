@@ -7,7 +7,6 @@
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
 #include "UserCode/TopFromHeavyIons/interface/lwJetContainer.h"
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 #include "UserCode/TopFromHeavyIons/interface/rhoMap.h"
 
 #include <map>
@@ -24,7 +23,6 @@ public:
    void SetRhoName(TString name)   { fRhoName  = name ; }
    void SetRhoMName(TString name)  { fRhoMName = name ; }
    void SetJetsName(TString name)  { fJetsName = name ; }
-   void SetHiEvtName(TString name) { fEvtName  = name ; }
    void SetNExcl(Int_t n)          { fNExcl    = n    ; }
    void SetEtaRangeAll(Double_t min, Double_t max) {fMinEta = min; fMaxEta = max;}
    void SetEtaLimit(Int_t i, Double_t eta) {fMapEtaRanges[i]=eta;}
@@ -41,8 +39,6 @@ public:
    //consumes
    TString           fJetsName;          //name of jet container
    lwJetContainer   *fJetsCont;          //!jet container
-   TString           fEvtName;           //name of hi event container
-   hiEventContainer *fHiEvent;           //!event container
    //members
    Int_t             fNExcl;             //exclude N leading jets
    Double_t          fMinEta;            //min eta

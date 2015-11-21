@@ -8,7 +8,6 @@
 #include "TRandom3.h"
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 #include "UserCode/TopFromHeavyIons/interface/rhoMap.h"
 #include "UserCode/TopFromHeavyIons/interface/pfParticle.h"
 #include "UserCode/TopFromHeavyIons/interface/lwMuon.h"
@@ -37,7 +36,6 @@ public:
    void Exec(Option_t *option="");
    void CreateOutputObjects();
 
-   void SetHiEvtName(TString name)    { fEvtName  = name ; }
    void SetMuonsName(TString name)    { fMuonsName = name ; }
    void SetPFPartName(TString name)   { fPFParticlesName = name ; }
    void SetRhoMapName(TString name)   { fRhoMapName = name ; }
@@ -61,8 +59,6 @@ public:
    Double_t          fOffset;           //offset to make cone larger for CS
    TRandom3         *fRandom;           //! random number generator
    Int_t             fCentBin;          //centrality bin
-   TString           fEvtName;          //name of hi event container
-   hiEventContainer *fHiEvent;          //!event container
    TString           fMuonsName;        //name of reconstructed muon array
    TClonesArray     *fMuons;            //!muon array
    TString           fPFParticlesName;  //name of array with objects to match

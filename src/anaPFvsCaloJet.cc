@@ -6,8 +6,6 @@ ClassImp(anaPFvsCaloJet)
    
 anaPFvsCaloJet::anaPFvsCaloJet(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fJetsName(""),
   fJetsCont(0x0),
   fJets2Name(""),
@@ -18,7 +16,11 @@ anaPFvsCaloJet::anaPFvsCaloJet(const char *name, const char *title)
   fh3PtTrueNPVDeltaPt(),
   fh3PtTrueNPVDeltaPtRel(),
   fh3PtTrueNPVScalePt(),
-  fh3PtTruePtSubNPV()
+  fh3PtTruePtSubNPV(),
+  fh3PtTrueEtaDeltaPt(),
+  fh3PtTrueEtaDeltaPtRel(),
+  fh3PtTrueEtaScalePt(),
+  fh3PtTruePtSubEta()
 {
 
 }
@@ -26,20 +28,23 @@ anaPFvsCaloJet::anaPFvsCaloJet(const char *name, const char *title)
 //----------------------------------------------------------
 void anaPFvsCaloJet::Exec(Option_t * /*option*/)
 {
-   //printf("anaPFvsCaloJet executing\n");
+ 
+  anaBaseTask::Exec();
+  if(!SelectEvent()) return;
+
+
+  //printf("anaPFvsCaloJet executing\n");
   if(!fInitOutput) CreateOutputObjects();
 
   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull()) {
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
+  if(fHiEvent) {
+    if(abs(fHiEvent->GetVz())>15.) return;
+  }
   
-   if(abs(fHiEvent->GetVz())>15.) return;
-   }
-   //Get PF jets
-   if(!fJetsCont && !fJetsName.IsNull())
-     fJetsCont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsName.Data()));
-   if(!fJetsCont) return;
+  //Get PF jets
+  if(!fJetsCont && !fJetsName.IsNull())
+    fJetsCont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsName.Data()));
+  if(!fJetsCont) return;
 
    //Get calo jets
    if(!fJets2Cont && !fJets2Name.IsNull())
@@ -52,8 +57,9 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
 
    float weight = 1.;
    if(fHiEvent) {
-   if(fHiEvent->GetWeight()>0.) weight = fHiEvent->GetWeight();
+     if(fHiEvent->GetWeight()>0.) weight = fHiEvent->GetWeight();
    }
+   
    for(Int_t ij = 0; ij<fJetsCont->GetNJets(); ij++) {
      lwJet *jet1 = fJetsCont->GetJet(ij);
      if(!jet1) continue;
@@ -113,6 +119,10 @@ void anaPFvsCaloJet::CreateOutputObjects() {
   const Double_t minNPV = 0.;
   const Double_t maxNPV = 100.;
 
+  const Int_t nBinsEta = 100;
+  const Double_t minEta = -5.;
+  const Double_t maxEta = 5.;
+
   fhEventSel = new TH1F("fhEventSel","fhEventSel",10,0,10);
   fOutput->Add(fhEventSel);
 
@@ -141,5 +151,25 @@ void anaPFvsCaloJet::CreateOutputObjects() {
   histTitle = Form("%s;#it{p}_{T,PF};#it{p}_{T,calo};NPV",histName.Data());
   fh3PtTruePtSubNPV = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsPtDet,minPtDet,maxPtDet,nBinsNPV,minNPV,maxNPV);
   fOutput->Add(fh3PtTruePtSubNPV);
+
+  histName = Form("fh3PtTrueEtaDeltaPt");
+  histTitle = Form("%s;#it{p}_{T,PF};Eta;#it{p}_{T,calo}-#it{p}_{T,PF}",histName.Data());
+  fh3PtTrueEtaDeltaPt = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta,nBinsDPt,minDPt,maxDPt);
+  fOutput->Add(fh3PtTrueEtaDeltaPt);
+
+  histName = Form("fh3PtTrueEtaDeltaPtRel");
+  histTitle = Form("%s;#it{p}_{T,PF};Eta;(#it{p}_{T,calo}-#it{p}_{T,PF})/#it{p}_{T,PF}",histName.Data());
+  fh3PtTrueEtaDeltaPtRel = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta,nBinsDPtRel,minDPtRel,maxDPtRel);
+  fOutput->Add(fh3PtTrueEtaDeltaPtRel);
+
+  histName = Form("fh3PtTrueEtaScalePt");
+  histTitle = Form("%s;#it{p}_{T,PF};Eta;#it{p}_{T,calo}/#it{p}_{T,PF}",histName.Data());
+  fh3PtTrueEtaScalePt = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta,nBinsScalePt,minScalePt,maxScalePt);
+  fOutput->Add(fh3PtTrueEtaScalePt);
+
+  histName = Form("fh3PtTruePtSubEta");
+  histTitle = Form("%s;#it{p}_{T,PF};#it{p}_{T,calo};Eta",histName.Data());
+  fh3PtTruePtSubEta = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsPtDet,minPtDet,maxPtDet,nBinsEta,minEta,maxEta);
+  fOutput->Add(fh3PtTruePtSubEta);
   
 }

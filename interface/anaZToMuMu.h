@@ -6,7 +6,6 @@
 #include "TH3F.h"
 #include "TClonesArray.h"
 
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
 #include "UserCode/TopFromHeavyIons/interface/particleBase.h"
 
@@ -23,15 +22,12 @@ public:
    void Exec(Option_t *option="");
    void CreateOutputObjects();
 
-   void SetHiEvtName(TString name)     { fEvtName  = name ; }
    void SetMuonsName(TString name)     { fMuonsName = name ; }
    void SetCheckPid(Bool_t b)          { fCheckPid = b; }
    
  protected:
    Bool_t            CheckPid(particleBase *p);
    
-   TString           fEvtName;              //name of hi event container
-   hiEventContainer *fHiEvent;              //!event container
    TString           fMuonsName;            //name of particles
    TClonesArray     *fMuons;                //!muon array
    TString           fZsName;               // name of Z candidates

@@ -124,6 +124,7 @@ Bool_t lwJetFromForestProducer::Run(Long64_t entry) {
   
   //put jets of this event in array
   Int_t jetCount = 0;
+  //Printf("%s: njets: %d",GetName(),fForestJets.nref);
   for(Int_t i = 0; i<fForestJets.nref; i++) {
     lwJet *jet = new lwJet(fForestJets.jtpt[i],
                            fForestJets.jteta[i],
@@ -135,10 +136,12 @@ Bool_t lwJetFromForestProducer::Run(Long64_t entry) {
     flwJetContainer->AddJet(jet,jetCount);
     ++jetCount;
   }
+  //Printf("jetCount: %d",jetCount);
   flwJetContainer->SortJets();
 
   //only produce gen jets if requested and if they exist
   if(flwGenJetContainer && fChain->GetBranch("ngen")) {
+    Printf("doing gen jets");
     if(fForestJets.ngen>0) {
       flwGenJetContainer->ClearVec();
       Int_t genJetCount = 0;

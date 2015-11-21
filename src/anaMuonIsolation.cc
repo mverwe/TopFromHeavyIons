@@ -15,8 +15,6 @@ anaMuonIsolation::anaMuonIsolation(const char *name, const char *title)
   fOffset(0.05),
   fRandom(new TRandom3(0)),
   fCentBin(-1),
-  fEvtName(""),
-  fHiEvent(),
   fMuonsName(""),
   fMuons(0x0),
   fPFParticlesName(""),
@@ -60,11 +58,7 @@ void anaMuonIsolation::Exec(Option_t * /*option*/)
    //printf("anaMuonIsolation executing\n");
    if(!fInitOutput) CreateOutputObjects();
 
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
-
+   //Get objects from event
    if(!fRhoMap && !fRhoMapName.IsNull())
      fRhoMap = dynamic_cast<rhoMap*>(fEventObjects->FindObject(fRhoMapName.Data()));
 

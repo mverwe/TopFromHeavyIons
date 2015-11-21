@@ -6,7 +6,6 @@
 #include "TH3F.h"
 #include "TClonesArray.h"
 
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 #include "UserCode/TopFromHeavyIons/interface/lwJetContainer.h"
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
@@ -25,15 +24,12 @@ public:
   void Exec(Option_t *option="");
   void CreateOutputObjects();
   
-  void SetHiEvtName(TString name)     { fEvtName  = name ; }
   void SetParticlesName(TString name) { fParticlesName = name ; }
   void SetJetsName(TString name)      { fJetsName = name ; }
   
   void SetMinPt(Float_t m)            { fMinPt = m; }
    
  protected:
-  TString           fEvtName;              //name of hi event container
-  hiEventContainer *fHiEvent;              //!event container
   TString           fParticlesName;        //name of particles
   TClonesArray     *fParticles;            //!pf particle array
   TString           fJetsName;             //name of jet array

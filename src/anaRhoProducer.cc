@@ -12,8 +12,6 @@ anaRhoProducer::anaRhoProducer(const char *name, const char *title)
   fRhoMMap(0x0),
   fJetsName(""),
   fJetsCont(),
-  fEvtName(""),
-  fHiEvent(),
   fNExcl(2),
   fMinEta(-5.),
   fMaxEta(5.),
@@ -55,11 +53,7 @@ void anaRhoProducer::Exec(Option_t * /*option*/)
      fEventObjects->Add(fRhoMMap);
    }
 
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
-   
+   //Get objects from event
    if(!fJetsCont && !fJetsName.IsNull())
      fJetsCont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsName.Data()));
    if(!fJetsCont) return;

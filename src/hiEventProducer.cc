@@ -23,7 +23,13 @@ inputBase("hiEventProducer"),
   fVz(0.),
   fHiBin(0),
   fHiHF(0),
-  fNPV(0)
+  fNPV(0),
+  fHLT_AK4PFJet80_Eta5p1_v1(0),
+  fHLT_HISinglePhoton30_Eta3p5_v1(0),
+  fHLT_FullTrack24ForPPRef_v1(0),
+  fHLT_FullTrack45ForPPRef_v1(0),
+  fcollisionEvtSel(0),
+  fHBHENoise(0)
 {
   //default constructor
 }
@@ -42,7 +48,13 @@ hiEventProducer::hiEventProducer(const char *name) :
   fVz(0.),
   fHiBin(0),
   fHiHF(0),
-  fNPV(0)
+  fNPV(0),
+  fHLT_AK4PFJet80_Eta5p1_v1(0),
+  fHLT_HISinglePhoton30_Eta3p5_v1(0),
+  fHLT_FullTrack24ForPPRef_v1(0),
+  fHLT_FullTrack45ForPPRef_v1(0),
+  fcollisionEvtSel(0),
+  fHBHENoise(0)
 {
   //standard constructor
 }
@@ -73,6 +85,18 @@ Bool_t hiEventProducer::Init() {
     fChain->SetBranchAddress("hiHF",  &fHiHF,  &b_hiHF);
     if(fChain->GetBranch("nPU"))
       fChain->SetBranchAddress("nPU",&fNPV,&b_nPU);
+    if(fChain->GetBranch("HLT_AK4PFJet80_Eta5p1_v1"))
+      fChain->SetBranchAddress("HLT_AK4PFJet80_Eta5p1_v1",&fHLT_AK4PFJet80_Eta5p1_v1,&b_HLT_AK4PFJet80_Eta5p1_v1);
+    if(fChain->GetBranch("HLT_HISinglePhoton30_Eta3p5_v1"))
+      fChain->SetBranchAddress("HLT_HISinglePhoton30_Eta3p5_v1",&fHLT_HISinglePhoton30_Eta3p5_v1,&b_HLT_HISinglePhoton30_Eta3p5_v1);
+    if(fChain->GetBranch("HLT_FullTrack24ForPPRef_v1"))
+      fChain->SetBranchAddress("HLT_FullTrack24ForPPRef_v1",&fHLT_FullTrack24ForPPRef_v1,&b_HLT_FullTrack24ForPPRef_v1);
+    if(fChain->GetBranch("HLT_FullTrack45ForPPRef_v1"))
+      fChain->SetBranchAddress("HLT_FullTrack45ForPPRef_v1",&fHLT_FullTrack45ForPPRef_v1,&b_HLT_FullTrack45ForPPRef_v1);
+    if(fChain->GetBranch("PAcollisionEventSelection"))
+      fChain->SetBranchAddress("PAcollisionEventSelection",&fcollisionEvtSel,&b_collisionEvtSel);
+    if(fChain->GetBranch("pHBHENoiseFilterResultProducer"))
+      fChain->SetBranchAddress("pHBHENoiseFilterResultProducer",&fHBHENoise,&b_HBHENoise);
 
     fInit = kTRUE;
   }
@@ -113,6 +137,12 @@ Bool_t hiEventProducer::Run(Long64_t entry) {
   fhiEventContainer->SetHiBin(fHiBin);
   fhiEventContainer->SetHiHF(fHiHF);
   fhiEventContainer->SetNPV(fNPV);
+  fhiEventContainer->SetPFJet80(fHLT_AK4PFJet80_Eta5p1_v1);
+  fhiEventContainer->SetPhoton30(fHLT_HISinglePhoton30_Eta3p5_v1);
+  fhiEventContainer->SetTrk24(fHLT_FullTrack24ForPPRef_v1);
+  fhiEventContainer->SetTrk45(fHLT_FullTrack45ForPPRef_v1);
+  fhiEventContainer->SetColl(fcollisionEvtSel);
+  fhiEventContainer->SetHBHENoise(fHBHENoise);
 
   return kTRUE; 
 }

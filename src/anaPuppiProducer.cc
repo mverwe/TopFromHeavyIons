@@ -19,8 +19,6 @@ anaPuppiProducer::anaPuppiProducer(const char *name, const char *title)
   fMinPtExLJ(20.),
   fdRMaxJet(0.4),
   fAddMetricType(kSumPt),
-  fEvtName(""),
-  fHiEvent(),
   fPFParticlesName(""),
   fPFParticles(0x0),
   fJetsName(""),
@@ -62,10 +60,7 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
      return;
    }
    
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
+   //Get objects from event
    
    //Get jet container
    if(!fJetsCont && !fJetsName.IsNull())

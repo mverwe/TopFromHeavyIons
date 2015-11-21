@@ -11,8 +11,6 @@ ClassImp(anaPuppiParticles)
    
 anaPuppiParticles::anaPuppiParticles(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fParticlesName(""),
   fParticles(0x0),
   fJetsName(""),
@@ -49,10 +47,7 @@ void anaPuppiParticles::Exec(Option_t * /*option*/)
    //printf("anaPuppiParticles executing\n");
    if(!fInitOutput) CreateOutputObjects();
 
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
+   //Get objects from event
 
    //Get particles from which MET will be calculated
    if(!fParticles && !fParticlesName.IsNull()) {

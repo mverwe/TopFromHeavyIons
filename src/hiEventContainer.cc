@@ -17,7 +17,13 @@ TNamed("hiEventContainer","hiEventContainer"),
   fVz(0.),
   fHiBin(0),
   fCent(0.),
-  fNPV(0)
+  fNPV(0),
+  fPFJet80(0),
+  fPhoton30(0),
+  fTrk24(0),
+  fTrk45(0),
+  fColl(0),
+  fHBHENoise(0)
 {
   //default constructor
 }
@@ -33,7 +39,13 @@ hiEventContainer::hiEventContainer(const char *name) :
   fVz(0.),
   fHiBin(0),
   fCent(0.),
-  fNPV(0)
+  fNPV(0),
+  fPFJet80(0),
+  fPhoton30(0),
+  fTrk24(0),
+  fTrk45(0),
+  fColl(0),
+  fHBHENoise(0)
 {
   //standard constructor
 }

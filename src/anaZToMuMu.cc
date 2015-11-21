@@ -10,8 +10,6 @@ ClassImp(anaZToMuMu)
    
 anaZToMuMu::anaZToMuMu(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fMuonsName(""),
   fMuons(0x0),
   fZsName(""),
@@ -29,10 +27,7 @@ void anaZToMuMu::Exec(Option_t * /*option*/)
    //printf("anaZToMuMu executing\n");
    if(!fInitOutput) CreateOutputObjects();
 
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) return;
+   //Get objects from event
 
    //Get particles from which MET will be calculated
    if(!fMuons && !fMuonsName.IsNull()) {

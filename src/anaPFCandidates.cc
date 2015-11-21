@@ -11,14 +11,13 @@ ClassImp(anaPFCandidates)
    
 anaPFCandidates::anaPFCandidates(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fParticlesName(""),
   fParticles(0x0),
   fJetsName(""),
   fJetsCont(0x0),
   fMinJetPt(80.),
   fMaxJetPt(100.),
+  fDoLeadingJet(false),
   fh1HiHF(0x0),
   fh1Cent(0x0),
   fh2CentPt(0),
@@ -27,6 +26,8 @@ anaPFCandidates::anaPFCandidates(const char *name, const char *title)
   fh2HiHFPtInJet(0),
   fh2CentPtJet(0),
   fh2HiHFPtJet(0),
+  fh2JetPtPartPtEta1(0),
+  fh2JetPtPartPtEta2(0),
   fh3CentPtEta(0),
   fh3CentPtEtaInJet(0),
   fh3HiHFPtEta(0),
@@ -63,14 +64,7 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
 {
    //printf("anaPFCandidates executing\n");
    if(!fInitOutput) CreateOutputObjects();
-
-   //Get event properties
-   if(!fHiEvent && !fEvtName.IsNull())
-     fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-   if(!fHiEvent) {
-     Printf("%s: WARNING: Couldn't locate %s branch",GetName(),fEvtName.Data());
-     return;
-   }
+   
    //Get particles from which MET will be calculated
    if(!fParticles && !fParticlesName.IsNull()) {
      fParticles = dynamic_cast<TClonesArray*>(fEventObjects->FindObject(fParticlesName.Data()));
@@ -114,7 +108,9 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
      //Printf("fJetsCont exists");
      Double_t r = fJetsCont->GetJetRadius();
      // Printf("R: %f",r);
-     for(Int_t ij = 0; ij<fJetsCont->GetNJets(); ij++) {
+     int njets = fJetsCont->GetNJets();
+     if(fDoLeadingJet) njets = 1;
+     for(Int_t ij = 0; ij<njets; ij++) {
        lwJet *jet = fJetsCont->GetJet(ij);
        if(!jet) continue;
 
@@ -128,6 +124,7 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
          fh3HiHFPtEtaJet->Fill(fHiEvent->GetHiHF(),jet->Pt(),jet->Eta());
 
          // Double_t ptById[10] = {0.};
+         double leadTrkPt = -1.;
          for (int i = 0; i < fParticles->GetEntriesFast(); i++) {
            //pfParticle *pf = static_cast<pfParticle*>(fParticles->At(i));
            particleBase *pb = static_cast<particleBase*>(fParticles->At(i));
@@ -135,6 +132,8 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
            if(pb->Pt()<1e-3) continue;
            Double_t dr = jet->DeltaR(pb);
            if(dr>r) continue; //only accept particles in cone
+
+           if(pb->Pt()>leadTrkPt) leadTrkPt = pb->Pt();
            
            //Printf("found particle close to jet. dr = %f",dr);
            Int_t id = pb->GetId();
@@ -147,6 +146,13 @@ void anaPFCandidates::Exec(Option_t * /*option*/)
              fh3HiHFPtEtaInJet[id]->Fill(fHiEvent->GetHiHF(),pb->Pt(),jet->Eta()); 
            }
          }
+
+         if(abs(jet->Eta())<1.)
+           fh2JetPtPartPtEta1->Fill(jet->Pt(),leadTrkPt);
+
+         if(abs(jet->Eta())<2.)
+           fh2JetPtPartPtEta2->Fill(jet->Pt(),leadTrkPt);
+                  
          /*
          for(Int_t t = 0; t<10; ++t) {
            fh3HiHFPtFracPF[t]->Fill(fHiEvent->GetHiHF(),jet->Pt(),ptById[t]/jet->Pt());
@@ -195,6 +201,16 @@ void anaPFCandidates::CreateOutputObjects() {
   histTitle = TString::Format("%s;centrality;p_{T,jet};#eta",histName.Data());
   fh3CentPtEtaJet = new TH3F(histName.Data(),histTitle.Data(),100,0.,100.,300.,0.,300.,100,-5.,5.);
   fOutput->Add(fh3CentPtEtaJet);
+
+  histName = "fh2JetPtPartPtEta1";
+  histTitle = TString::Format("%s;p_{T,jet};p_{T,part}",histName.Data());
+  fh2JetPtPartPtEta1 = new TH2F(histName.Data(),histTitle.Data(),500,0.,500.,500,0.,500.);
+  fOutput->Add(fh2JetPtPartPtEta1);
+
+  histName = "fh2JetPtPartPtEta2";
+  histTitle = TString::Format("%s;p_{T,jet};p_{T,part}",histName.Data());
+  fh2JetPtPartPtEta2 = new TH2F(histName.Data(),histTitle.Data(),500,0.,500.,500,0.,500.);
+  fOutput->Add(fh2JetPtPartPtEta2);
 
   histName = "fh3HiHFPtEtaJet";
   histTitle = TString::Format("%s;E_{HF};p_{T,jet};#eta",histName.Data());

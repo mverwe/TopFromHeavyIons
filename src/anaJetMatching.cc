@@ -6,8 +6,6 @@ ClassImp(anaJetMatching)
    
 anaJetMatching::anaJetMatching(const char *name, const char *title) 
 :anaBaseTask(name,title),
-  fEvtName(""),
-  fHiEvent(),
   fJetsNameBase(""),
   fJetsContBase(),
   fJetsNameTag(""),
@@ -33,21 +31,20 @@ anaJetMatching::anaJetMatching(const char *name, const char *title)
 //----------------------------------------------------------
 void anaJetMatching::Exec(Option_t * /*option*/)
 {
+
+	  anaBaseTask::Exec();
+
   // printf("anaJetMatching executing\n");
   if(!fInitOutput) CreateOutputObjects();
 
-  //Get event properties
-  if(!fHiEvent && !fEvtName.IsNull()) {
-    fHiEvent = dynamic_cast<hiEventContainer*>(fEventObjects->FindObject(fEvtName.Data()));
-  if(!fHiEvent) return;
-  }
-   if(!fJetsContBase && !fJetsNameBase.IsNull())
-     fJetsContBase = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameBase.Data()));
-   if(!fJetsContBase) { Printf("No fJetsContBase"); return; }
-
-   if(!fJetsContTag && !fJetsNameTag.IsNull())
-     fJetsContTag = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameTag.Data()));
-   if(!fJetsContTag) { Printf("No fJetsContTag"); return; }
+  //Get objects from event
+  if(!fJetsContBase && !fJetsNameBase.IsNull())
+    fJetsContBase = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameBase.Data()));
+  if(!fJetsContBase) { Printf("No fJetsContBase"); return; }
+  
+  if(!fJetsContTag && !fJetsNameTag.IsNull())
+    fJetsContTag = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJetsNameTag.Data()));
+  if(!fJetsContTag) { Printf("No fJetsContTag"); return; }
 
   // Printf("start matching");
    MatchJetsGeo();
@@ -76,8 +73,8 @@ void anaJetMatching::MatchJetsGeo() {
   const Int_t nJets1 = fJetsContBase->GetNJets();
   const Int_t nJets2 = fJetsContTag->GetNJets();
   if(nJets1==0 || nJets2==0) {
-     Printf("nJets1: %d  nJets2: %d",nJets1,nJets2);	  
-	  return;
+     //Printf("nJets1: %d  nJets2: %d",nJets1,nJets2);	  
+     return;
   }
 
   TArrayI faMatchIndex1;

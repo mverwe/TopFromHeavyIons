@@ -6,7 +6,6 @@
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
 #include "UserCode/TopFromHeavyIons/interface/lwJetContainer.h"
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
 
 class anaJetMatching : public anaBaseTask {
    
@@ -17,7 +16,6 @@ public:
    void Exec(Option_t *option="");
    void CreateOutputObjects();
 
-   void SetHiEvtName(TString name)    { fEvtName  = name ; }
    void SetJetsNameBase(TString name) { fJetsNameBase = name ; }
    void SetJetsNameTag(TString name)  { fJetsNameTag  = name ; }
    void SetNCentBins(Int_t n)         { fNcentBins = n ; }
@@ -25,8 +23,6 @@ public:
    void MatchJetsGeo();
    
  protected:
-   TString           fEvtName;          //name of hi event container
-   hiEventContainer *fHiEvent;          //!event container
    TString          fJetsNameBase;    //name of jet container
    lwJetContainer  *fJetsContBase;    //!jet container
    TString          fJetsNameTag;     //name of jet container

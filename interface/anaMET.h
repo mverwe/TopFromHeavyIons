@@ -6,8 +6,6 @@
 #include "TH3F.h"
 #include "TClonesArray.h"
 
-#include "UserCode/TopFromHeavyIons/interface/hiEventContainer.h"
-
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
 
 //
@@ -33,14 +31,11 @@ public:
    void Exec(Option_t *option="");
    void CreateOutputObjects();
 
-   void SetHiEvtName(TString name)     { fEvtName  = name ; }
    void SetParticlesName(TString name) { fParticlesName = name ; }
    void SetMetType(metType t)          { fMetType = t; }
    void SetMinPt(Float_t m)            { fMinPt = m; }
    
  protected:
-   TString           fEvtName;              //name of hi event container
-   hiEventContainer *fHiEvent;              //!event container
    TString           fParticlesName;        //name of particles
    TClonesArray     *fParticles;            //!muon array
    metType           fMetType;              //matching type (defines where to store)
