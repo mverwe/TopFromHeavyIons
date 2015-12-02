@@ -13,6 +13,9 @@ anaPFvsCaloJet::anaPFvsCaloJet(const char *name, const char *title)
   fhEventSel(),
   fhCentrality(),
   fhNPV(),
+  fh2PtEtaNoMatching(),
+  fh3PtEtaPhiNotMatched(),
+  fh3PtEtaPhiMatched(),
   fh3PtTrueNPVDeltaPt(),
   fh3PtTrueNPVDeltaPtRel(),
   fh3PtTrueNPVScalePt(),
@@ -51,9 +54,19 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
      fJets2Cont = dynamic_cast<lwJetContainer*>(fEventObjects->FindObject(fJets2Name.Data()));
    if(!fJets2Cont) return;
 
+   const Int_t nJets1 = fJetsCont->GetNJets();
+   const Int_t nJets2 = fJets2Cont->GetNJets();
+   if(nJets1==0 || nJets2==0) {
+     //Printf("nJets1: %d  nJets2: %d",nJets1,nJets2);
+     return;
+   }
+
+
    int npv = 1;
    if(fHiEvent) npv = fHiEvent->GetNPV();
    fhNPV->Fill(npv);
+
+   fhEventSel->Fill(0.5);
 
    float weight = 1.;
    if(fHiEvent) {
@@ -64,21 +77,35 @@ void anaPFvsCaloJet::Exec(Option_t * /*option*/)
      lwJet *jet1 = fJetsCont->GetJet(ij);
      if(!jet1) continue;
 
-     //TODO: implement settable eta cut
-     if(abs(jet1->Eta())>1.3) continue;
-
+     fh2PtEtaNoMatching->Fill(jet1->Pt(),jet1->Eta(),weight);
+          
      int id = jet1->GetMatchId1();
      lwJet *jet2 = fJets2Cont->GetJet(id);
-     if(!jet2) continue;
+     if(!jet2) {
+       fh3PtEtaPhiNotMatched->Fill(jet1->Pt(),jet1->Eta(),jet1->Phi(),weight);
+       continue;
+     }
+       
+     fh3PtEtaPhiMatched->Fill(jet1->Pt(),jet1->Eta(),jet1->Phi(),weight);
      
      double dpt = jet2->Pt()-jet1->Pt();
-     fh3PtTrueNPVDeltaPt->Fill(jet1->Pt(),npv,dpt,weight);
+
+     fh3PtTrueEtaDeltaPt->Fill(jet1->Pt(),jet1->Eta(),dpt,weight);
      if(jet1->Pt()>0.) {
-       fh3PtTrueNPVDeltaPtRel->Fill(jet1->Pt(),npv,dpt/jet1->Pt(),weight);
-       fh3PtTrueNPVScalePt->Fill(jet1->Pt(),npv,jet2->Pt()/jet1->Pt(),weight);
+       fh3PtTrueEtaDeltaPtRel->Fill(jet1->Pt(),jet1->Eta(),dpt/jet1->Pt(),weight);
+       fh3PtTrueEtaScalePt->Fill(jet1->Pt(),jet1->Eta(),jet2->Pt()/jet1->Pt(),weight);
      }
-     fh3PtTruePtSubNPV->Fill(jet1->Pt(),jet2->Pt(),npv,weight);
+     fh3PtTruePtSubEta->Fill(jet1->Pt(),jet2->Pt(),jet1->Eta(),weight);
      
+     if(abs(jet1->Eta())<1.3) {
+       
+       fh3PtTrueNPVDeltaPt->Fill(jet1->Pt(),npv,dpt,weight);
+       if(jet1->Pt()>0.) {
+         fh3PtTrueNPVDeltaPtRel->Fill(jet1->Pt(),npv,dpt/jet1->Pt(),weight);
+         fh3PtTrueNPVScalePt->Fill(jet1->Pt(),npv,jet2->Pt()/jet1->Pt(),weight);
+       }
+       fh3PtTruePtSubNPV->Fill(jet1->Pt(),jet2->Pt(),npv,weight);
+     }
    }
 
 }
@@ -123,6 +150,10 @@ void anaPFvsCaloJet::CreateOutputObjects() {
   const Double_t minEta = -5.;
   const Double_t maxEta = 5.;
 
+  const Int_t nBinsPhi = 72;
+  const Double_t minPhi = -TMath::Pi();
+  const Double_t maxPhi = TMath::Pi();
+
   fhEventSel = new TH1F("fhEventSel","fhEventSel",10,0,10);
   fOutput->Add(fhEventSel);
 
@@ -132,6 +163,21 @@ void anaPFvsCaloJet::CreateOutputObjects() {
   fhNPV = new TH1F("fhNPV","fhNPV",nBinsNPV,minNPV,maxNPV);
   fOutput->Add(fhNPV);
 
+  histName = "fh2PtEtaNoMatching";
+  histTitle = Form("%s;#it{p}_{T,PF};#eta;",histName.Data());
+  fh2PtEtaNoMatching = new TH2F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta);
+  fOutput->Add(fh2PtEtaNoMatching);
+
+  histName = "fh3PtEtaPhiNotMatched";
+  histTitle = Form("%s;#it{p}_{T,PF};#eta;",histName.Data());
+  fh3PtEtaPhiNotMatched = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi);
+  fOutput->Add(fh3PtEtaPhiNotMatched);
+
+  histName = "fh3PtEtaPhiMatched";
+  histTitle = Form("%s;#it{p}_{T,PF};#eta;",histName.Data());
+  fh3PtEtaPhiMatched = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi);
+  fOutput->Add(fh3PtEtaPhiMatched);
+  
   histName = Form("fh3PtTrueNPVDeltaPt");
   histTitle = Form("%s;#it{p}_{T,PF};NPV;#it{p}_{T,calo}-#it{p}_{T,PF}",histName.Data());
   fh3PtTrueNPVDeltaPt = new TH3F(histName.Data(),histTitle.Data(),nBinsPtPart,minPtPart,maxPtPart,nBinsNPV,minNPV,maxNPV,nBinsDPt,minDPt,maxDPt);

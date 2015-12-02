@@ -16,14 +16,14 @@ inputBase("lwMuonProducer"),
   flwMuonsGeneName("lwMuonsGene"),
   flwMuonsGene(0x0),
   fMuons(),
-  fPtMin(16.),
+  fPtMin(10.),
   fMaxEtaAbs(2.1),
   fMaxTrkChi2(4.),
   fMaxGlbChi2(10.),
   fMinNMuHits(1),
   fMinMS(2),
-  fMaxDxy(3.),
-  fMaxDz(15.),
+  fMaxDxy(0.2),//3.),
+  fMaxDz(0.5),//15.),
   fMinNPixHits(1),
   fMinTrkLWM(6)
 {
@@ -44,8 +44,8 @@ lwMuonProducer::lwMuonProducer(const char *name) :
   fMaxGlbChi2(10.),
   fMinNMuHits(1),
   fMinMS(2),
-  fMaxDxy(3.),
-  fMaxDz(15.),
+  fMaxDxy(0.2),//3.),
+  fMaxDz(0.5),//15.),
   fMinNPixHits(1),
   fMinTrkLWM(6)
 {
@@ -115,7 +115,7 @@ Bool_t lwMuonProducer::InitEventObjects() {
       flwMuonsReco->SetName(flwMuonsRecoName);
       fEventObjects->Add(flwMuonsReco);
     }
-    if(!fEventObjects->FindObject(flwMuonsGeneName)) {
+    if(!fEventObjects->FindObject(flwMuonsGeneName) && !flwMuonsGeneName.IsNull()) {
       flwMuonsGene = new TClonesArray("genParticle");
       flwMuonsGene->SetName(flwMuonsGeneName);
       fEventObjects->Add(flwMuonsGene);
@@ -136,7 +136,7 @@ Bool_t lwMuonProducer::Run(Long64_t entry) {
   
   //clear arrays
   flwMuonsReco->Delete();
-  flwMuonsGene->Delete();
+  if(flwMuonsGene) flwMuonsGene->Delete();
 
   //reconstructed muons
   Int_t muCount = 0;
@@ -155,21 +155,23 @@ Bool_t lwMuonProducer::Run(Long64_t entry) {
   //Printf("%d reconstructed muons",muCount);
 
   //generated muons
-  muCount = 0;
-  for(Int_t i = 0; i<fMuons.Gen_nptl; i++) {
-    genParticle *mu = new genParticle(fMuons.Gen_pt[i],
-                                      fMuons.Gen_eta[i],
-                                      fMuons.Gen_phi[i],
-                                      0,
-                                      i);
-    mu->SetCharge(fMuons.Gen_pid[i]/abs(fMuons.Gen_pid[i]));
-    mu->SetPID(fMuons.Gen_pid[i]);
-    mu->SetPIDMom(fMuons.Gen_mom[i]);
-    (*flwMuonsGene)[muCount] = mu;
-    ++muCount;
+  if(flwMuonsGene) {
+    muCount = 0;
+    for(Int_t i = 0; i<fMuons.Gen_nptl; i++) {
+      genParticle *mu = new genParticle(fMuons.Gen_pt[i],
+                                        fMuons.Gen_eta[i],
+                                        fMuons.Gen_phi[i],
+                                        0,
+                                        i);
+      mu->SetCharge(fMuons.Gen_pid[i]/abs(fMuons.Gen_pid[i]));
+      mu->SetPID(fMuons.Gen_pid[i]);
+      mu->SetPIDMom(fMuons.Gen_mom[i]);
+      (*flwMuonsGene)[muCount] = mu;
+      ++muCount;
+    }
+    flwMuonsGene->Sort();
+    //Printf("%d generated muons",muCount);
   }
-  flwMuonsGene->Sort();
-  //Printf("%d generated muons",muCount);
   
   return kTRUE;
 }

@@ -36,6 +36,7 @@ public:
    Bool_t            fCheckPid;             //check if candidates are really muons (for simulation)
    TH1F             *fh1NMuons;             //!# selected muons in event
    TH3F             *fh3CentPtInvMass;      //!centrality vs Pt vs inv mass
+   TH3F             *fh3CentPtInvMassSC;    //!centrality vs Pt vs inv mass for same charge
    
    ClassDef(anaZToMuMu,2)
 };

@@ -110,6 +110,9 @@ void anaPuppiProducer::Exec(Option_t * /*option*/)
    }
    
    //pf candidate loop to calculate alpha for each particle
+
+   //plan: apply pt cut to particles, put particles passing in std::vector and work with those for the rest of the algo
+
    for (int i = 0; i < fPFParticles->GetEntriesFast(); i++) {
      pfParticle *p1 = static_cast<pfParticle*>(fPFParticles->At(i));
      Double_t var = 0.;

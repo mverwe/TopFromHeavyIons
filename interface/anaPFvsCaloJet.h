@@ -5,6 +5,7 @@
 #define anaPFvsCaloJet_h
 
 #include "TString.h"
+#include "TH2F.h"
 #include "TH3F.h"
 
 #include "UserCode/TopFromHeavyIons/interface/anaBaseTask.h"
@@ -33,6 +34,10 @@ public:
    TH1F      *fhCentrality;
    TH1F      *fhNPV;
    
+   TH2F      *fh2PtEtaNoMatching;
+   TH3F      *fh3PtEtaPhiNotMatched;
+   TH3F      *fh3PtEtaPhiMatched;
+
    TH3F      *fh3PtTrueNPVDeltaPt;
    TH3F      *fh3PtTrueNPVDeltaPtRel;
    TH3F      *fh3PtTrueNPVScalePt;

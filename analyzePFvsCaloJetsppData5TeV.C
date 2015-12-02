@@ -109,7 +109,7 @@ void analyzePFvsCaloJetsppData(std::vector<std::string> urls, const char *outnam
   p_pf->SetEventObjects(fEventObjects);
 
   lwJetFromForestProducer *p_pfJet = new lwJetFromForestProducer("lwJetForestProd");
-  p_pfJet->SetInput(chain);
+  p_pfJet->SetInput(pfJetTree);//chain);
   p_pfJet->SetJetContName("akt4PF");
   p_pfJet->SetGenJetContName("");//akt4Gen");
   p_pfJet->SetEventObjects(fEventObjects);
@@ -147,6 +147,15 @@ void analyzePFvsCaloJetsppData(std::vector<std::string> urls, const char *outnam
   anaPFCaloJet->SetPFJetsName("akt4PF");
   anaPFCaloJet->SetCaloJetsName("akt4Calo");
   handler->Add(anaPFCaloJet);
+
+  anaPFvsCaloJet *anaCaloPFJet = new anaPFvsCaloJet("anaCalovsPFJet","anaCalovsPFJet");
+  anaCaloPFJet->ConnectEventObject(fEventObjects);
+  anaCaloPFJet->SetHiEvtName("hiEventContainer");
+  anaCaloPFJet->DoPFJet80(true);
+  anaCaloPFJet->DoExcludePhoton30(true);
+  anaCaloPFJet->SetPFJetsName("akt4Calo");
+  anaCaloPFJet->SetCaloJetsName("akt4PF");
+  handler->Add(anaCaloPFJet);
 
   /*
   //PF-GEN matching

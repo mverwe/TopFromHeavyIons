@@ -63,11 +63,11 @@ void anaJetMatching::MatchJetsGeo() {
   if(fHiEvent) cent = fHiEvent->GetCentrality();
   Int_t fCentBin = 0;
   if(fNcentBins==4) {
-  if(cent>=0. && cent<10.)       fCentBin = 0;
-  else if(cent>=10. && cent<30.) fCentBin = 1;
-  else if(cent>=30. && cent<50.) fCentBin = 2;
-  else if(cent>=50. && cent<80.) fCentBin = 3;
-  else fCentBin = -1;
+    if(cent>=0. && cent<10.)       fCentBin = 0;
+    else if(cent>=10. && cent<30.) fCentBin = 1;
+    else if(cent>=30. && cent<50.) fCentBin = 2;
+    else if(cent>=50. && cent<80.) fCentBin = 3;
+    else fCentBin = -1;
   } 
 
   const Int_t nJets1 = fJetsContBase->GetNJets();
@@ -90,7 +90,7 @@ void anaJetMatching::MatchJetsGeo() {
     iFlag.Set(nJets1*nJets2+1);
   iFlag.Reset(0);
 
-  Double_t maxDist = 0.3; //limit CPU time
+  Double_t maxDist = 0.4; //limit CPU time
   
   //Find the clostest tag jet to base jet
   Double_t dist = maxDist;
@@ -163,7 +163,6 @@ void anaJetMatching::MatchJetsGeo() {
       }
     }
   }
-  
 }
 
 //----------------------------------------------------------
@@ -201,7 +200,6 @@ void anaJetMatching::CreateOutputObjects() {
     histTitle = TString::Format("%s;#it{p}_{T,jet2};(#it{p}_{T,jet2}-#it{p}_{T,jet1})/#it{p}_{T,jet1}",histName.Data());
     fh2PtJet2VsRelPt[i] = new TH2F(histName.Data(),histTitle.Data(),nBinsPt,minPt,maxPt,241,-2.41,2.41);
     fOutput->Add(fh2PtJet2VsRelPt[i]);
-
   }
 
 }
